@@ -1,0 +1,98 @@
+import { notFound } from "next/navigation";
+
+import { getMostCommonEnglishWords2000 } from "@/data/mostCommonEnglishWords2000";
+import { getDictionary } from "@/i18n/getDictionary";
+import { isLocale, type Locale } from "@/i18n/locales";
+
+export default async function Words2000Page({
+	params,
+}: {
+	params: Promise<{ locale: string }>;
+}) {
+	const { locale: localeParam } = await params;
+
+	if (!isLocale(localeParam)) {
+		notFound();
+	}
+
+	const locale = localeParam as Locale;
+	const dict = getDictionary(locale);
+
+	const rows = await getMostCommonEnglishWords2000();
+
+	const labels =
+		locale === "pt-br"
+			? {
+					title: "2000 palavras mais comuns (inglês)",
+					colWord: "Palavra (EN)",
+					colTranslation: "Tradução (PT-BR)",
+					colExampleEn: "Frase (EN)",
+					colExamplePt: "Tradução (PT-BR)",
+					colContext: "Contexto",
+				}
+			: locale === "es"
+				? {
+						title: "2000 palabras más comunes (inglés)",
+						colWord: "Palabra (EN)",
+						colTranslation: "Traducción (PT-BR)",
+						colExampleEn: "Frase (EN)",
+						colExamplePt: "Traducción (PT-BR)",
+						colContext: "Contexto",
+					}
+				: {
+						title: "2000 most common words (English)",
+						colWord: "Word (EN)",
+						colTranslation: "Translation (PT-BR)",
+						colExampleEn: "Example (EN)",
+						colExamplePt: "Translation (PT-BR)",
+						colContext: "Context",
+					};
+
+	return (
+		<div className="min-h-screen bg-zinc-50 font-sans dark:bg-black">
+			<div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
+				<header className="flex flex-col gap-2">
+					<h1 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
+						{labels.title}
+					</h1>
+					<p className="text-sm text-zinc-600 dark:text-zinc-400">{dict.mvpNote}</p>
+				</header>
+
+				<div className="mt-8 overflow-x-auto rounded-2xl border border-solid border-black/8 bg-white dark:border-white/[.145] dark:bg-black">
+					<table className="min-w-[980px] w-full text-left text-sm">
+						<thead className="border-b border-black/8 bg-zinc-50 text-xs uppercase tracking-wide text-zinc-600 dark:border-white/[.145] dark:bg-zinc-950 dark:text-zinc-400">
+							<tr>
+								<th className="px-4 py-3">{labels.colWord}</th>
+								<th className="px-4 py-3">{labels.colTranslation}</th>
+								<th className="px-4 py-3">{labels.colExampleEn}</th>
+								<th className="px-4 py-3">{labels.colExamplePt}</th>
+								<th className="px-4 py-3">{labels.colContext}</th>
+							</tr>
+						</thead>
+						<tbody>
+							{rows.map((row) => (
+								<tr key={row.word} className="border-b border-black/8 last:border-0 dark:border-white/[.145]">
+									<td className="px-4 py-3 font-medium text-zinc-950 dark:text-zinc-50">
+										{row.word}
+									</td>
+									<td className="px-4 py-3 text-zinc-700 dark:text-zinc-300">
+										{row.translationPtBr ?? "—"}
+									</td>
+									<td className="px-4 py-3 text-zinc-700 dark:text-zinc-300">
+										{row.exampleEn ?? "—"}
+									</td>
+									<td className="px-4 py-3 text-zinc-700 dark:text-zinc-300">
+										{row.examplePtBr ?? "—"}
+									</td>
+									<td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
+										{row.context ?? "—"}
+									</td>
+								</tr>
+							))}
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	);
+}

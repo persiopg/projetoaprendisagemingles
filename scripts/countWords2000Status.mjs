@@ -25,17 +25,13 @@ function extractKeysFromOverridesTs(text) {
 function main() {
   const repoRoot = path.join(import.meta.dirname, "..");
   const wordsPath = path.join(repoRoot, "src", "data", "mostCommonEnglishWords2000.words.ts");
-  const manualOverridesPath = path.join(repoRoot, "src", "data", "mostCommonEnglishWords2000.manualOverrides.ts");
   const generatedOverridesPath = path.join(repoRoot, "src", "data", "mostCommonEnglishWords2000.generatedOverrides.ts");
-
-  const manualTxt = readFileSync(manualOverridesPath, "utf8");
-  const manualKeys = extractKeysFromOverridesTs(manualTxt);
 
   const generatedKeys = existsSync(generatedOverridesPath)
     ? extractKeysFromOverridesTs(readFileSync(generatedOverridesPath, "utf8"))
     : new Set();
 
-  const overrideKeys = new Set([...manualKeys, ...generatedKeys]);
+  const overrideKeys = new Set([...generatedKeys]);
 
   if (!existsSync(wordsPath)) {
     const estimatedMissing = Math.max(0, 2000 - overrideKeys.size);
@@ -43,7 +39,6 @@ function main() {
       JSON.stringify(
         {
           baseCount: 2000,
-          manualOverrideKeyCount: manualKeys.size,
           generatedOverrideKeyCount: generatedKeys.size,
           overrideKeyCount: overrideKeys.size,
           presentCount: overrideKeys.size,
@@ -69,7 +64,6 @@ function main() {
     JSON.stringify(
       {
         baseCount: baseSet.size,
-        manualOverrideKeyCount: manualKeys.size,
         generatedOverrideKeyCount: generatedKeys.size,
         overrideKeyCount: overrideKeys.size,
         presentCount: present.length,

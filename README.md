@@ -2,13 +2,10 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## 2000 palavras (offline)
 
-Este projeto gera a lista base de 2000 palavras **offline** (ordenadas por frequência) e preenche tradução/frase/contexto via overrides.
+Este projeto gera a lista base de 2000 palavras **offline** (ordenadas por frequência) e preenche tradução/frase/contexto via geração offline.
 
 - Base (2000 palavras): [src/data/mostCommonEnglishWords2000.words.ts](src/data/mostCommonEnglishWords2000.words.ts)
-- Overrides manuais (qualidade): [src/data/mostCommonEnglishWords2000.manualOverrides.ts](src/data/mostCommonEnglishWords2000.manualOverrides.ts)
-- Overrides gerados (opcional): [src/data/mostCommonEnglishWords2000.generatedOverrides.ts](src/data/mostCommonEnglishWords2000.generatedOverrides.ts)
-
-Regra de prioridade: **manual > gerado > vazio**.
+- Dataset gerado: [src/data/mostCommonEnglishWords2000.generatedOverrides.ts](src/data/mostCommonEnglishWords2000.generatedOverrides.ts)
 
 ### Regerar a base (offline)
 
@@ -26,21 +23,17 @@ Mostra quantas palavras da base ainda estão sem override preenchido:
 npm run count:words
 ```
 
-## Wiktionary offline (CC BY-SA)
+## Tatoeba + Argos (offline)
 
-Dá para usar um dump offline do Wiktionary para **sugerir** traduções/exemplos/contexto e gerar overrides.
+Este projeto usa o corpus do Tatoeba para escolher frases reais em inglês e, quando existir, usar uma tradução humana em português.
 
-- O Wiktionary **não** é uma fonte de frequência: para manter a ordem “mais comuns”, a base continua vindo da lista de frequência.
-- Se você copiar textos/exemplos/definições do Wiktionary para o repositório, isso cria obrigações de **atribuição** e **share-alike** (CC BY-SA) para o material derivado.
+- Quando não houver tradução humana disponível para a frase escolhida, a tradução é feita com **Argos Translate (offline)**.
+- A tradução da palavra (coluna PT-BR) também é feita via **Argos Translate (offline)**.
 
-### Gerar overrides a partir do dump (Kaikki JSONL)
-
-Pré-requisito: ter o arquivo em `web/data/wiktionary/kaikki.org-dictionary-English.jsonl`.
-
-Gera `src/data/mostCommonEnglishWords2000.generatedOverrides.ts` (camada "gerado"), mantendo a prioridade do manual:
+Para (re)gerar o dataset:
 
 ```bash
-npm run gen:wiktionary
+npm run gen:tatoeba
 ```
 
 Sobre licença/atribuição: veja [ATTRIBUTION.md](ATTRIBUTION.md).

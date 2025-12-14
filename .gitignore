@@ -40,5 +40,5 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-# Wiktionary/Kaikki dumps (muito grandes)
-/data/wiktionary/
+# Downloads do Tatoeba (muito grandes)
+/data/tatoeba/

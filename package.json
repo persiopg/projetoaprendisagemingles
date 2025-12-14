@@ -8,7 +8,7 @@
     "start": "next start",
     "lint": "eslint",
     "gen:words": "node ./scripts/generateMostCommonEnglishWords2000Words.mjs",
-    "gen:wiktionary": "node ./scripts/generateMostCommonEnglishWords2000GeneratedOverridesFromWiktionary.mjs",
+    "gen:tatoeba": "python ./scripts/generateMostCommonEnglishWords2000GeneratedOverridesFromTatoeba.py",
     "count:words": "node ./scripts/countWords2000Status.mjs"
   },
   "dependencies": {
