@@ -1,16 +1,17 @@
 import type { ReactNode } from "react";
 import { getDictionary } from "@/i18n/getDictionary";
 import { Navbar } from "@/components/Navbar";
-import type { Locale } from "@/i18n/locales";
+import { defaultLocale, isLocale } from "@/i18n/locales";
 
 export default async function LocaleLayout({
   children,
   params,
 }: {
   children: ReactNode;
-  params: Promise<{ locale: Locale }>;
+  params: Promise<{ locale: string }>;
 }) {
-  const { locale } = await params;
+  const { locale: localeParam } = await params;
+  const locale = isLocale(localeParam) ? localeParam : defaultLocale;
   const dictionary = getDictionary(locale);
 
   return (

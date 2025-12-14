@@ -40,6 +40,38 @@ function sleep(ms) {
   return new Promise((resolve) => setTimeout(resolve, ms));
 }
 
+function isMyMemoryQuotaWarning(text) {
+  return (
+    typeof text === "string" &&
+    text.toUpperCase().includes("MYMEMORY WARNING:") &&
+    text.toUpperCase().includes("USED ALL AVAILABLE FREE TRANSLATIONS")
+  );
+}
+
+function hashString(input) {
+  // hash simples e estável (não-criptográfico) para escolher templates
+  let h = 2166136261;
+  for (let i = 0; i < input.length; i += 1) {
+    h ^= input.charCodeAt(i);
+    h = Math.imul(h, 16777619);
+  }
+  return h >>> 0;
+}
+
+function pick(arr, key) {
+  const idx = hashString(key) % arr.length;
+  return arr[idx];
+}
+
+function isMetaExample(exampleEn) {
+  return (
+    typeof exampleEn === "string" &&
+    (exampleEn.includes('I learned the word "') ||
+      exampleEn.includes("I learned the word \"") ||
+      exampleEn.includes("I learned the word"))
+  );
+}
+
 async function translateWordWithRetry(word, maxRetries = 6) {
   let attempt = 0;
   while (true) {
@@ -50,6 +82,12 @@ async function translateWordWithRetry(word, maxRetries = 6) {
       const translated = data?.responseData?.translatedText;
       if (typeof translated !== "string") {
         throw new Error("Unexpected MyMemory response shape");
+      }
+
+      if (isMyMemoryQuotaWarning(translated)) {
+        throw new Error(
+          "MyMemory quota reached (returned quota warning string). Try again later or use another translation source.",
+        );
       }
       return translated;
     } catch (err) {
@@ -68,14 +106,47 @@ async function translateWithRetry(text, maxRetries = 6) {
 
 function loadWords2000() {
   const raw = readFileSync(INPUT_WORDS_FILE, "utf8");
-  return raw
-    .split(/\r?\n/)
-    .map((line) => line.trim())
-    .filter(Boolean)
-    .slice(0, Math.min(2000, Math.max(1, LIMIT)));
+
+  // O arquivo de origem pode conter tokens que não são úteis para estudo (ex.: letras soltas).
+  // Mantém apenas 1-letra quando faz sentido como palavra em inglês: "a" e "i".
+  const keepSingleLetter = new Set(["a", "i"]);
+
+  const limit = Math.min(2000, Math.max(1, LIMIT));
+  const seen = new Set();
+  const out = [];
+
+  for (const line of raw.split(/\r?\n/)) {
+    const word = line.trim();
+    if (!word) continue;
+
+    const lower = word.toLowerCase();
+
+    if (lower.length === 1 && !keepSingleLetter.has(lower)) continue;
+
+    // Evita duplicatas (pelo lowercase)
+    if (seen.has(lower)) continue;
+    seen.add(lower);
+
+    out.push(word);
+    if (out.length >= limit) break;
+  }
+
+  return out;
 }
 
 const special = {
+  a: {
+    translationPtBr: "um/uma (artigo indefinido)",
+    exampleEn: "I have a car.",
+    examplePtBr: "Eu tenho um carro.",
+    context: "Cotidiano (posse)",
+  },
+  an: {
+    translationPtBr: "um/uma (antes de som de vogal)",
+    exampleEn: "She ate an apple.",
+    examplePtBr: "Ela comeu uma maçã.",
+    context: "Cotidiano (comida)",
+  },
   the: {
     translationPtBr: "o/a (artigo definido)",
     exampleEn: "The book is on the table.",
@@ -222,30 +293,80 @@ const special = {
   },
 };
 
-function buildGenericExample(word) {
-  return `I learned the word "${word}" today.`;
+function guessPos(word) {
+  const w = word.toLowerCase();
+  if (w.endsWith("ly")) return "adv";
+  if (w.endsWith("ing") || w.endsWith("ed")) return "verb";
+  if (w.endsWith("tion") || w.endsWith("ment") || w.endsWith("ness") || w.endsWith("ity")) return "noun";
+  if (w.endsWith("ous") || w.endsWith("ful") || w.endsWith("less") || w.endsWith("able") || w.endsWith("ive")) return "adj";
+  return "noun";
 }
 
-function buildGenericExamplePtBr(word) {
-  return `Eu aprendi a palavra "${word}" hoje.`;
+function buildUsageExampleEn(word) {
+  const w = word;
+  const pos = guessPos(word);
+
+  const nounTemplates = [
+    `I saw ${w} on the table.`,
+    `We talked about ${w} after class.`,
+    `Please write ${w} in your notebook.`,
+    `I need ${w} for this project.`,
+  ];
+
+  const verbTemplates = [
+    `I ${w} every day to improve.`,
+    `They ${w} when they have time.`,
+    `We will ${w} tomorrow morning.`,
+    `Can you ${w} with me?`,
+  ];
+
+  const adjTemplates = [
+    `This lesson is very ${w}.`,
+    `It was a ${w} day for everyone.`,
+    `That sounds ${w} to me.`,
+    `The instructions are ${w} and clear.`,
+  ];
+
+  const advTemplates = [
+    `Please speak ${w} so I can understand.`,
+    `She answered ${w} and moved on.`,
+    `He works ${w} when the deadline is close.`,
+    `Try again, but do it ${w}.`,
+  ];
+
+  const chosen =
+    pos === "verb"
+      ? verbTemplates
+      : pos === "adj"
+        ? adjTemplates
+        : pos === "adv"
+          ? advTemplates
+          : nounTemplates;
+
+  return pick(chosen, `ex:${word}`);
 }
 
 function buildContext(word) {
   const key = word.toLowerCase();
   if (special[key]?.context) return special[key].context;
-  return "Estudos (vocabulário)";
+  const pos = guessPos(word);
+  if (pos === "verb") return "Cotidiano (ações/rotina)";
+  if (pos === "adj") return "Cotidiano (descrições/opiniões)";
+  if (pos === "adv") return "Cotidiano (modo/forma)";
+  return "Cotidiano (assuntos/objetos)";
 }
 
 function buildExampleEn(word) {
   const key = word.toLowerCase();
   if (special[key]?.exampleEn) return special[key].exampleEn;
-  return buildGenericExample(word);
+  return buildUsageExampleEn(word);
 }
 
 function buildExamplePtBr(word) {
   const key = word.toLowerCase();
   if (special[key]?.examplePtBr) return special[key].examplePtBr;
-  return buildGenericExamplePtBr(word);
+  // Para palavras não-especiais, a tradução vem do serviço.
+  return null;
 }
 
 function loadCache() {
@@ -339,7 +460,35 @@ async function main() {
     async ({ word }) => {
       const key = word.toLowerCase();
 
-      if (cache[key] && cache[key].translationPtBr && cache[key].examplePtBr) {
+      // Se existe entrada especial, ela deve sempre prevalecer (inclusive sobre cache antigo)
+      // para evitar exemplos genéricos do tipo "I learned the word ...".
+      if (special[key]) {
+        const entry = {
+          word,
+          translationPtBr:
+            special[key].translationPtBr || (await translateWithRetry(word)),
+          exampleEn: buildExampleEn(word),
+          examplePtBr: buildExamplePtBr(word) || (await translateWithRetry(buildExampleEn(word))),
+          context: buildContext(word),
+        };
+
+        cache[key] = entry;
+        completed += 1;
+        if (completed % 50 === 0) {
+          console.log(`Progress: ${completed}/${words.length}`);
+          saveCache(cache);
+        }
+
+        return entry;
+      }
+
+      if (
+        cache[key] &&
+        cache[key].translationPtBr &&
+        cache[key].examplePtBr &&
+        cache[key].exampleEn &&
+        !isMetaExample(cache[key].exampleEn)
+      ) {
         completed += 1;
         if (completed % 50 === 0) {
           console.log(`Progress: ${completed}/${words.length} (cached)`);
@@ -358,16 +507,8 @@ async function main() {
       }
 
       // 2) tradução da frase
-      let examplePtBr = special[key]?.examplePtBr;
-      if (!examplePtBr) {
-        try {
-          examplePtBr = await translateWithRetry(exampleEn);
-          await sleep(DELAY_MS);
-        } catch {
-          // fallback local (sem chamada remota)
-          examplePtBr = buildExamplePtBr(word);
-        }
-      }
+      const examplePtBr = await translateWithRetry(exampleEn);
+      await sleep(DELAY_MS);
 
       const entry = {
         word,
