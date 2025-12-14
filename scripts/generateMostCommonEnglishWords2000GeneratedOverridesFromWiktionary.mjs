@@ -194,23 +194,74 @@ function isSimpleAlpha(word) {
   return /^[a-z]+$/.test(word);
 }
 
+const IRREGULAR_LEMMAS = {
+  am: "be",
+  is: "be",
+  are: "be",
+  was: "be",
+  were: "be",
+  been: "be",
+  being: "be",
+
+  did: "do",
+  does: "do",
+  done: "do",
+  doing: "do",
+
+  came: "come",
+  gone: "go",
+  went: "go",
+  made: "make",
+  built: "build",
+  brought: "bring",
+  bought: "buy",
+  thought: "think",
+  found: "find",
+  gave: "give",
+  taken: "take",
+  took: "take",
+  seen: "see",
+  said: "say",
+  had: "have",
+  has: "have",
+  having: "have",
+
+  children: "child",
+  men: "man",
+  women: "woman",
+};
+
 function candidateLookupForms(baseWord) {
   const w = normalizeWord(baseWord);
   const forms = new Set([w]);
-  if (!isSimpleAlpha(w) || w.length < 4) return [...forms];
+  const irregular = IRREGULAR_LEMMAS[w];
+  if (irregular) {
+    forms.add(irregular);
+    // Para formas irregulares curtas, não aplicamos heurísticas genéricas.
+    return [...forms];
+  }
+
+  if (!isSimpleAlpha(w) || w.length < 3) return [...forms];
 
   // plural
-  if (w.endsWith("ies") && w.length > 4) forms.add(w.slice(0, -3) + "y");
-  if (w.endsWith("es") && w.length > 4) forms.add(w.slice(0, -2));
-  if (w.endsWith("s") && !w.endsWith("ss") && w.length > 4) forms.add(w.slice(0, -1));
+  if (w.endsWith("ies") && w.length > 3) forms.add(w.slice(0, -3) + "y");
+  if (w.endsWith("es") && w.length > 3) forms.add(w.slice(0, -2));
+  if (w.endsWith("s") && !w.endsWith("ss") && w.length > 3) forms.add(w.slice(0, -1));
 
   // past
-  if (w.endsWith("ied") && w.length > 4) forms.add(w.slice(0, -3) + "y");
-  if (w.endsWith("ed") && w.length > 4) forms.add(w.slice(0, -2));
-  if (w.endsWith("d") && w.length > 4) forms.add(w.slice(0, -1));
+  if (w.endsWith("ied") && w.length > 3) forms.add(w.slice(0, -3) + "y");
+  if (w.endsWith("ed") && w.length > 3) {
+    const stem = w.slice(0, -2);
+    forms.add(stem);
+    if (stem.length >= 3) forms.add(stem + "e");
+  }
 
   // gerund
-  if (w.endsWith("ing") && w.length > 5) forms.add(w.slice(0, -3));
+  if (w.endsWith("ing") && w.length > 4) {
+    const stem = w.slice(0, -3);
+    forms.add(stem);
+    if (stem.length >= 3) forms.add(stem + "e");
+  }
 
   return [...forms];
 }
