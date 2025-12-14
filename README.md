@@ -33,6 +33,18 @@ Dá para usar um dump offline do Wiktionary para **sugerir** traduções/exemplo
 - O Wiktionary **não** é uma fonte de frequência: para manter a ordem “mais comuns”, a base continua vindo da lista de frequência.
 - Se você copiar textos/exemplos/definições do Wiktionary para o repositório, isso cria obrigações de **atribuição** e **share-alike** (CC BY-SA) para o material derivado.
 
+### Gerar overrides a partir do dump (Kaikki JSONL)
+
+Pré-requisito: ter o arquivo em `web/data/wiktionary/kaikki.org-dictionary-English.jsonl`.
+
+Gera `src/data/mostCommonEnglishWords2000.generatedOverrides.ts` (camada "gerado"), mantendo a prioridade do manual:
+
+```bash
+npm run gen:wiktionary
+```
+
+Sobre licença/atribuição: veja [ATTRIBUTION.md](ATTRIBUTION.md).
+
 ## Getting Started
 
 First, run the development server:
