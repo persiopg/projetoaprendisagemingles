@@ -1,5 +1,38 @@
 This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
 
+## 2000 palavras (offline)
+
+Este projeto gera a lista base de 2000 palavras **offline** (ordenadas por frequência) e preenche tradução/frase/contexto via overrides.
+
+- Base (2000 palavras): [src/data/mostCommonEnglishWords2000.words.ts](src/data/mostCommonEnglishWords2000.words.ts)
+- Overrides manuais (qualidade): [src/data/mostCommonEnglishWords2000.manualOverrides.ts](src/data/mostCommonEnglishWords2000.manualOverrides.ts)
+- Overrides gerados (opcional): [src/data/mostCommonEnglishWords2000.generatedOverrides.ts](src/data/mostCommonEnglishWords2000.generatedOverrides.ts)
+
+Regra de prioridade: **manual > gerado > vazio**.
+
+### Regerar a base (offline)
+
+Gera/regera `WORDS_EN_2000` a partir do arquivo local do pacote `most-common-words-by-language`:
+
+```bash
+npm run gen:words
+```
+
+### Ver quantas faltam
+
+Mostra quantas palavras da base ainda estão sem override preenchido:
+
+```bash
+npm run count:words
+```
+
+## Wiktionary offline (CC BY-SA)
+
+Dá para usar um dump offline do Wiktionary para **sugerir** traduções/exemplos/contexto e gerar overrides.
+
+- O Wiktionary **não** é uma fonte de frequência: para manter a ordem “mais comuns”, a base continua vindo da lista de frequência.
+- Se você copiar textos/exemplos/definições do Wiktionary para o repositório, isso cria obrigações de **atribuição** e **share-alike** (CC BY-SA) para o material derivado.
+
 ## Getting Started
 
 First, run the development server:

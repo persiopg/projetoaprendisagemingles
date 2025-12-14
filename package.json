@@ -6,7 +6,9 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "gen:words": "node ./scripts/generateMostCommonEnglishWords2000Words.mjs",
+    "count:words": "node ./scripts/countWords2000Status.mjs"
   },
   "dependencies": {
     "most-common-words-by-language": "^3.0.14",

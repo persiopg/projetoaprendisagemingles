@@ -826,6 +826,12 @@ export const MOST_COMMON_ENGLISH_WORDS_2000_MANUAL_OVERRIDES: Record<
     examplePtBr: "Esta é uma nova oportunidade.",
     context: "Recente.",
   },
+  news: {
+    translationPtBr: "Notícias",
+    exampleEn: "I saw the news this morning.",
+    examplePtBr: "Eu vi as notícias hoje de manhã.",
+    context: "Informações/reportagens sobre acontecimentos recentes.",
+  },
   because: {
     translationPtBr: "Porque, Já que",
     exampleEn: "I stayed home because I was sick.",
