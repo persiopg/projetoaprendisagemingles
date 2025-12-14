@@ -1,7 +1,6 @@
 "use client";
 
-import Link from "next/link";
-
+import { usePathname, useRouter } from "next/navigation";
 import { locales, type Locale } from "@/i18n/locales";
 
 const labels: Record<Locale, string> = {
@@ -17,28 +16,41 @@ export function LanguageSwitcher({
   currentLocale: Locale;
   label: string;
 }) {
+  const router = useRouter();
+  const pathname = usePathname();
+
+  const handleChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
+    const newLocale = e.target.value as Locale;
+
+    // Redirect to the new locale path
+    if (!pathname) return;
+
+    const segments = pathname.split("/");
+    // segments[0] is empty because path starts with /
+    // segments[1] is the locale
+    segments[1] = newLocale;
+    const newPath = segments.join("/");
+
+    router.push(newPath);
+  };
+
   return (
-    <nav className="flex flex-wrap items-center gap-3 text-sm text-zinc-600 dark:text-zinc-400">
-      <span className="font-medium text-zinc-950 dark:text-zinc-50">{label}:</span>
-      <div className="flex flex-wrap gap-2">
-        {locales.map((locale) => {
-          const isActive = locale === currentLocale;
-          return (
-            <Link
-              key={locale}
-              href={`/${locale}`}
-              aria-current={isActive ? "page" : undefined}
-              className={
-                isActive
-                  ? "rounded-full border border-solid border-black/[.08] px-3 py-1 text-zinc-950 dark:border-white/[.145] dark:text-zinc-50"
-                  : "rounded-full border border-solid border-black/[.08] px-3 py-1 hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a]"
-              }
-            >
-              {labels[locale]}
-            </Link>
-          );
-        })}
-      </div>
-    </nav>
+    <div className="flex items-center gap-2 text-sm">
+      <label htmlFor="language-select" className="font-medium text-zinc-950 dark:text-zinc-50">
+        {label}:
+      </label>
+      <select
+        id="language-select"
+        value={currentLocale}
+        onChange={handleChange}
+        className="rounded-md border border-zinc-200 bg-white px-2 py-1 text-sm text-zinc-900 focus:border-zinc-400 focus:outline-none dark:border-zinc-800 dark:bg-zinc-950 dark:text-zinc-50 dark:focus:border-zinc-600"
+      >
+        {locales.map((locale) => (
+          <option key={locale} value={locale}>
+            {labels[locale]}
+          </option>
+        ))}
+      </select>
+    </div>
   );
 }

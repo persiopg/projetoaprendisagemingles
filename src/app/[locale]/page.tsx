@@ -1,6 +1,5 @@
 import { notFound } from "next/navigation";
 
-import { LanguageSwitcher } from "@/components/LanguageSwitcher";
 import { getDictionary } from "@/i18n/getDictionary";
 import { isLocale, locales, type Locale } from "@/i18n/locales";
 
@@ -57,8 +56,6 @@ export default async function LocaleHome({
                 {dict.navReasons}
               </a>
             </nav>
-
-            <LanguageSwitcher currentLocale={locale} label={dict.languageLabel} />
           </div>
         </header>
 

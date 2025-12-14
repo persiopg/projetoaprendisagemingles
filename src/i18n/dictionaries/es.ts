@@ -9,6 +9,8 @@ export const dictionary: Dictionary = {
   navTopics: "Temas principales",
   navAdvantages: "Ventajas",
   navReasons: "Motivos",
+  navHome: "Inicio",
+  nav2000Words: "2000 Palabras",
 
   ctaPrimary: "Empezar con lo básico",
 

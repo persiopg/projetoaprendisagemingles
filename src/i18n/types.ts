@@ -7,6 +7,8 @@ export type Dictionary = {
   navTopics: string;
   navAdvantages: string;
   navReasons: string;
+  navHome: string;
+  nav2000Words: string;
 
   ctaPrimary: string;
 
