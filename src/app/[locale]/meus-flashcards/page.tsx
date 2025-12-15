@@ -38,11 +38,16 @@ export default async function MyFlashcardsPage({
     progress.forEach((p) => learnedWords.add(p.word));
   }
 
-  // Filter words to show only unlearned ones, limited to ~286 (2000/7)
+  // Calculate batch based on total learned count to allow review/unlearning
   const validWords = words.filter((w) => w.translationPtBr);
-  const unlearnedWords = validWords.filter((w) => !learnedWords.has(w.word));
-  const dailyLimit = Math.ceil(2000 / 7);
-  const dailyBatch = unlearnedWords.slice(0, dailyLimit);
+  const batchSize = Math.ceil(2000 / 7); // ~286 words per level
+  const currentLevel = Math.floor(learnedWords.size / batchSize);
+  
+  const start = currentLevel * batchSize;
+  const end = start + batchSize;
+  
+  // Get the current batch of words (mixed learned and unlearned)
+  const dailyBatch = validWords.slice(start, end);
   
   return (
     <div className="container mx-auto px-4 py-8">
@@ -55,7 +60,7 @@ export default async function MyFlashcardsPage({
 
       <FlashcardGame 
         initialWords={dailyBatch} 
-        initialLearnedWords={[]} // Start with 0 learned in this batch
+        initialLearnedWords={Array.from(learnedWords)}
         totalLearnedCount={learnedWords.size}
         totalWordCount={validWords.length}
       />
