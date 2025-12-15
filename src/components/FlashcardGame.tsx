@@ -175,7 +175,7 @@ export default function FlashcardGame({
     <div className="flex flex-col lg:flex-row items-start justify-center h-full gap-6 w-full">
       {/* Left Column: Game Area */}
       <div className="flex flex-col items-center w-full lg:flex-1 h-full min-h-0">
-        <div className="w-full max-w-3xl mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800 flex-none">
+        <div className="w-full  mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800 flex-none">
           <div className="flex justify-between items-end mb-1">
             <p className="text-xs font-medium text-blue-800 dark:text-blue-200">
               Total Aprendido (Geral)
@@ -192,13 +192,13 @@ export default function FlashcardGame({
           </div>
         </div>
 
-        <div className="w-full max-w-3xl flex justify-between items-center mb-2 text-xs text-gray-500 dark:text-gray-400 flex-none">
+        <div className="w-full  flex justify-between items-center mb-2 text-xs text-gray-500 dark:text-gray-400 flex-none">
           <span>Palavra {currentIndex + 1} de {words.length}</span>
           <span>Nesta Sessão: {learnedWords.size}</span>
         </div>
 
         <div
-          className="relative w-full max-w-3xl flex-1 min-h-0 cursor-pointer perspective-[1000px] mb-4"
+          className="relative w-full  flex-1 min-h-0 cursor-pointer perspective-[1000px] mb-4"
           style={getSlideStyle()}
           onClick={handleFlip}
         >
@@ -247,7 +247,7 @@ export default function FlashcardGame({
           </div>
         </div>
 
-        <div className="flex flex-col gap-3 w-full max-w-3xl flex-none">
+        <div className="flex flex-col gap-3 w-full  flex-none">
           <div className="flex justify-between gap-4">
             <button
               onClick={(e) => {

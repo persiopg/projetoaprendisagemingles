@@ -26,7 +26,7 @@ export default async function LocaleHome({
 
   return (
     <div className="min-h-screen bg-zinc-50 font-sans dark:bg-black">
-      <div className="mx-auto w-full max-w-5xl px-6 py-10 sm:py-12">
+      <div className="container mx-auto px-4 py-10 sm:py-12">
         <header className="flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-baseline gap-3">
             <h1 className="text-xl font-semibold tracking-tight text-black dark:text-zinc-50">

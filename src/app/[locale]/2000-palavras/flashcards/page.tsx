@@ -11,8 +11,8 @@ export default async function FlashcardsPage({
   const words = await getMostCommonEnglishWords2000();
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
+    <div className="container mx-auto px-4 py-4 h-[calc(100vh-4rem)] flex flex-col">
+      <div className="mb-4 flex-none">
         <Link 
           href={`/${locale}/2000-palavras`}
           className="text-blue-600 hover:underline mb-4 inline-block"
@@ -25,7 +25,9 @@ export default async function FlashcardsPage({
         </p>
       </div>
 
-      <FlashcardGame initialWords={words} totalLearnedCount={0} totalWordCount={words.length} />
+      <div className="flex-1 min-h-0">
+        <FlashcardGame initialWords={words} totalLearnedCount={0} totalWordCount={words.length} />
+      </div>
     </div>
   );
 }
