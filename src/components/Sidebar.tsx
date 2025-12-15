@@ -148,7 +148,7 @@ export function Sidebar({ dictionary, locale, session }: SidebarProps) {
         {/* Language Switcher */}
         <div className={`flex ${isCollapsed ? "justify-center" : "justify-between"} items-center`}>
            {!isCollapsed && <span className="text-xs font-medium text-zinc-500 uppercase">{dictionary.languageLabel}</span>}
-           <LanguageSwitcher currentLocale={locale} label={isCollapsed ? "" : dictionary.languageLabel} />
+           <LanguageSwitcher currentLocale={locale} isCollapsed={isCollapsed} />
         </div>
 
         {session ? (
