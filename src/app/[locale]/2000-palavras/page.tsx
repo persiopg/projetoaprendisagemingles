@@ -68,7 +68,7 @@ export default async function Words2000Page({
 				</header>
 
 				<div className="mt-8 overflow-x-auto rounded-2xl border border-solid border-black/8 bg-white dark:border-white/[.145] dark:bg-black">
-					<table className="min-w-[980px] w-full text-left text-sm">
+					<table className="min-w-245 w-full text-left text-sm">
 						<thead className="border-b border-black/8 bg-zinc-50 text-xs uppercase tracking-wide text-zinc-600 dark:border-white/[.145] dark:bg-zinc-950 dark:text-zinc-400">
 							<tr>
 								<th className="px-4 py-3">{labels.colWord}</th>

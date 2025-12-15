@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useMemo } from "react";
 import { MostCommonEnglishWordEntry } from "@/data/mostCommonEnglishWords2000.types";
 
 interface FlashcardGameProps {
@@ -9,17 +9,15 @@ interface FlashcardGameProps {
 
 export default function FlashcardGame({ initialWords }: FlashcardGameProps) {
   // Filter words to ensure we only show ones with translations
-  const [words, setWords] = useState<MostCommonEnglishWordEntry[]>([]);
+  const words = useMemo(() => {
+    return initialWords.filter((w) => w.translationPtBr);
+  }, [initialWords]);
+
   const [currentIndex, setCurrentIndex] = useState(0);
   const [isFlipped, setIsFlipped] = useState(false);
   const [slideState, setSlideState] = useState<
     "idle" | "exiting-left" | "exiting-right" | "entering-left" | "entering-right"
   >("idle");
-
-  useEffect(() => {
-    const validWords = initialWords.filter((w) => w.translationPtBr);
-    setWords(validWords);
-  }, [initialWords]);
 
   if (words.length === 0) {
     return (
@@ -107,21 +105,18 @@ export default function FlashcardGame({ initialWords }: FlashcardGameProps) {
       </div>
 
       <div
-        className="relative w-full max-w-md h-80 cursor-pointer"
-        style={{ perspective: "1000px", ...getSlideStyle() }}
+        className="relative w-full max-w-md h-80 cursor-pointer perspective-[1000px]"
+        style={getSlideStyle()}
         onClick={handleFlip}
       >
         <div
-          className="relative w-full h-full transition-transform duration-500"
-          style={{ 
-            transformStyle: "preserve-3d", 
-            transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)" 
-          }}
+          className={`relative w-full h-full transition-transform duration-500 transform-3d ${
+            isFlipped ? "transform-[rotateY(180deg)]" : ""
+          }`}
         >
           {/* Front */}
           <div
-            className="absolute w-full h-full bg-white dark:bg-gray-800 rounded-xl shadow-xl flex flex-col items-center justify-center p-8 border-2 border-blue-100 dark:border-blue-900"
-            style={{ backfaceVisibility: "hidden" }}
+            className="absolute w-full h-full bg-white dark:bg-gray-800 rounded-xl shadow-xl flex flex-col items-center justify-center p-8 border-2 border-blue-100 dark:border-blue-900 backface-hidden"
           >
             <h2 className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-4">
               {currentWord.word}
@@ -131,8 +126,7 @@ export default function FlashcardGame({ initialWords }: FlashcardGameProps) {
 
           {/* Back */}
           <div
-            className="absolute w-full h-full bg-blue-50 dark:bg-gray-900 rounded-xl shadow-xl flex flex-col items-center justify-center p-8 border-2 border-blue-200 dark:border-blue-800"
-            style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+            className="absolute w-full h-full bg-blue-50 dark:bg-gray-900 rounded-xl shadow-xl flex flex-col items-center justify-center p-8 border-2 border-blue-200 dark:border-blue-800 backface-hidden transform-[rotateY(180deg)]"
           >
             <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
               {currentWord.translationPtBr}
@@ -147,11 +141,11 @@ export default function FlashcardGame({ initialWords }: FlashcardGameProps) {
             {currentWord.exampleEn && (
               <div className="text-center mt-4 space-y-2">
                 <p className="text-lg text-gray-700 dark:text-gray-300 italic">
-                  "{currentWord.exampleEn}"
+                  &quot;{currentWord.exampleEn}&quot;
                 </p>
                 {currentWord.examplePtBr && (
                   <p className="text-md text-gray-500 dark:text-gray-400">
-                    "{currentWord.examplePtBr}"
+                    &quot;{currentWord.examplePtBr}&quot;
                   </p>
                 )}
               </div>
