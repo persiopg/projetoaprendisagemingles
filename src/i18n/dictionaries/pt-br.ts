@@ -12,6 +12,7 @@ export const dictionary: Dictionary = {
   navHome: "Início",
   nav2000Words: "2000 Palavras",
   navFlashcards: "Flashcards",
+  navShadowing: "Shadowing",
 
   ctaPrimary: "Começar pelo básico",
 

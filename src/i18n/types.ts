@@ -10,6 +10,7 @@ export type Dictionary = {
   navHome: string;
   nav2000Words: string;
   navFlashcards: string;
+  navShadowing: string;
 
   ctaPrimary: string;
 
