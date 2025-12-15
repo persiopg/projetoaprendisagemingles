@@ -42,11 +42,23 @@ export default async function ShadowingPage({
 
     // Filter out learned words to show only new ones (or maybe show a mix?)
     // For "Daily Goal" style, let's show the first 20 unlearned words.
-    const unlearnedPhrases = validPhrases.filter(p => !learnedWords.has(p.word));
-    phrasesToShow = unlearnedPhrases.slice(0, 20);
+    // const unlearnedPhrases = validPhrases.filter(p => !learnedWords.has(p.word));
+    // phrasesToShow = unlearnedPhrases.slice(0, 20);
+
+    // Use Level Logic (2000/7)
+    const batchSize = Math.ceil(2000 / 7); // ~286 words per level
+    const currentLevel = Math.floor(learnedWords.size / batchSize);
+    
+    const start = currentLevel * batchSize;
+    const end = start + batchSize;
+    
+    // Get the current batch of words (mixed learned and unlearned)
+    phrasesToShow = validPhrases.slice(start, end);
+
   } else {
-    // If not logged in, show first 20
-    phrasesToShow = validPhrases.slice(0, 20);
+    // If not logged in, show first batch
+    const batchSize = Math.ceil(2000 / 7);
+    phrasesToShow = validPhrases.slice(0, batchSize);
   }
 
   return (
