@@ -11,13 +11,16 @@ export const dictionary: Dictionary = {
   navBenefits: "Benefits",
   navGetStarted: "Get started",
 
+  homeHeroBadge: "MVP - Early access",
   homeHeroTitle: "Practice English with quick, focused drills",
   homeHeroSubtitle:
     "Flashcards, shadowing, dictation, and reverse translation to turn study into daily practice — with progress and consistency.",
   homeHeroPrimaryCta: "Create account",
   homeHeroSecondaryCta: "I already have an account",
 
+  homeExamplesKicker: "Method",
   homeExamplesTitle: "Examples of what you can practice",
+  homeExamplesSubtitle: "Pick the training mode that fits your goal today.",
   homeExamples: [
     {
       title: "Flashcards (2000 words)",
@@ -50,11 +53,31 @@ export const dictionary: Dictionary = {
   ],
 
   homeBenefitsTitle: "Benefits of learning with us",
+  homeBenefitsSubtitle:
+    "We focus on what brings real results and cut unnecessary complexity.",
   homeBenefits: [
     "Short, repeatable sessions: easy to practice daily.",
     "Skill-based activities (listening, speaking, writing, and vocabulary).",
     "User progress tracking: see what you’ve mastered and what’s next.",
     "Content based on common real-life words and phrases.",
+  ],
+  homeBenefitsDetailed: [
+    {
+      title: "Short, repeatable sessions",
+      description: "Easy to practice every day without friction.",
+    },
+    {
+      title: "All skills covered",
+      description: "Drills for listening, speaking, writing, and vocabulary.",
+    },
+    {
+      title: "Progress per user",
+      description: "See what you’ve mastered and what’s next.",
+    },
+    {
+      title: "Real-life English",
+      description: "Content based on common daily words and phrases.",
+    },
   ],
 
   homeFinalTitle: "Start today and stay consistent",
@@ -62,6 +85,8 @@ export const dictionary: Dictionary = {
     "Create your account and pick a training mode. A few minutes a day already adds up.",
   homeFinalCta: "Sign up",
   homeFinalSecondaryCta: "Log in",
+
+  homeFooterText: "© 2025 Learn English (MVP). All rights reserved.",
 
   // Dashboard (logged-in home)
   dashboardTitle: "Your dashboard",

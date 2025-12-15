@@ -9,12 +9,15 @@ export type Dictionary = {
   navBenefits: string;
   navGetStarted: string;
 
+  homeHeroBadge: string;
   homeHeroTitle: string;
   homeHeroSubtitle: string;
   homeHeroPrimaryCta: string;
   homeHeroSecondaryCta: string;
 
+  homeExamplesKicker: string;
   homeExamplesTitle: string;
+  homeExamplesSubtitle: string;
   homeExamples: Array<{
     title: string;
     description: string;
@@ -23,12 +26,19 @@ export type Dictionary = {
   }>;
 
   homeBenefitsTitle: string;
+  homeBenefitsSubtitle: string;
   homeBenefits: string[];
+  homeBenefitsDetailed: Array<{
+    title: string;
+    description: string;
+  }>;
 
   homeFinalTitle: string;
   homeFinalSubtitle: string;
   homeFinalCta: string;
   homeFinalSecondaryCta: string;
+
+  homeFooterText: string;
 
   // Dashboard (logged-in home)
   dashboardTitle: string;

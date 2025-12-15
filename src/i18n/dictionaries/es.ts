@@ -11,13 +11,17 @@ export const dictionary: Dictionary = {
   navBenefits: "Ventajas",
   navGetStarted: "Empezar",
 
+  homeHeroBadge: "MVP - Acceso anticipado",
   homeHeroTitle: "Practica inglés con entrenamientos rápidos y enfocados",
   homeHeroSubtitle:
     "Flashcards, shadowing, dictado y traducción inversa para convertir el estudio en práctica diaria — con progreso y constancia.",
   homeHeroPrimaryCta: "Crear cuenta",
   homeHeroSecondaryCta: "Ya tengo una cuenta",
 
+  homeExamplesKicker: "Metodología",
   homeExamplesTitle: "Ejemplos de lo que puedes practicar",
+  homeExamplesSubtitle:
+    "Elige el modo de entrenamiento que mejor se adapte a tu objetivo.",
   homeExamples: [
     {
       title: "Flashcards (2000 palabras)",
@@ -50,11 +54,31 @@ export const dictionary: Dictionary = {
   ],
 
   homeBenefitsTitle: "Ventajas de aprender con nosotros",
+  homeBenefitsSubtitle:
+    "Nos enfocamos en lo que da resultados reales y eliminamos complejidad innecesaria.",
   homeBenefits: [
     "Sesiones cortas y repetibles: fácil practicar a diario.",
     "Actividades por habilidad (escuchar, hablar, escribir y vocabulario).",
     "Seguimiento de progreso: ves lo que ya dominas y lo que sigue.",
     "Contenido basado en palabras y frases comunes del día a día.",
+  ],
+  homeBenefitsDetailed: [
+    {
+      title: "Sesiones cortas y repetibles",
+      description: "Fácil de practicar cada día sin complicaciones.",
+    },
+    {
+      title: "Enfoque en todas las habilidades",
+      description: "Ejercicios para escuchar, hablar, escribir y vocabulario.",
+    },
+    {
+      title: "Progreso por usuario",
+      description: "Ves lo que ya dominas y lo que sigue.",
+    },
+    {
+      title: "Inglés de la vida real",
+      description: "Contenido con palabras y frases comunes del día a día.",
+    },
   ],
 
   homeFinalTitle: "Empieza hoy y mantén la constancia",
@@ -62,6 +86,8 @@ export const dictionary: Dictionary = {
     "Crea tu cuenta y elige un modo de entrenamiento. Unos minutos al día ya suman.",
   homeFinalCta: "Registrarse",
   homeFinalSecondaryCta: "Entrar",
+
+  homeFooterText: "© 2025 Aprende Inglés (MVP). Todos los derechos reservados.",
 
   // Dashboard (logged-in home)
   dashboardTitle: "Tu panel",

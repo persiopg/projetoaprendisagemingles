@@ -11,13 +11,17 @@ export const dictionary: Dictionary = {
   navBenefits: "Vantagens",
   navGetStarted: "Começar",
 
+  homeHeroBadge: "MVP - Acesso antecipado",
   homeHeroTitle: "Pratique inglês com treinos rápidos e objetivos",
   homeHeroSubtitle:
     "Flashcards, shadowing, ditado e tradução reversa para transformar estudo em prática diária — com progresso e consistência.",
   homeHeroPrimaryCta: "Criar conta",
   homeHeroSecondaryCta: "Já tenho conta",
 
+  homeExamplesKicker: "Metodologia",
   homeExamplesTitle: "Exemplos do que você encontra aqui",
+  homeExamplesSubtitle:
+    "Escolha o modo de treino que mais se adapta ao seu momento e objetivo.",
   homeExamples: [
     {
       title: "Flashcards (2000 palavras)",
@@ -50,11 +54,35 @@ export const dictionary: Dictionary = {
   ],
 
   homeBenefitsTitle: "Vantagens de aprender com a gente",
+  homeBenefitsSubtitle:
+    "Focamos naquilo que traz resultado real, eliminando a complexidade desnecessária.",
   homeBenefits: [
     "Treinos curtos e repetíveis: dá para praticar todos os dias.",
     "Atividades focadas em habilidade (ouvir, falar, escrever e vocabulário).",
     "Progresso por usuário: você vê o que já dominou e o que falta.",
     "Conteúdo baseado em palavras e frases comuns do dia a dia.",
+  ],
+  homeBenefitsDetailed: [
+    {
+      title: "Treinos curtos e repetíveis",
+      description:
+        "Dá para praticar todos os dias, encaixando na sua rotina sem sofrimento.",
+    },
+    {
+      title: "Foco em todas as habilidades",
+      description:
+        "Atividades para ouvir, falar, escrever e expandir seu vocabulário.",
+    },
+    {
+      title: "Progresso por usuário",
+      description:
+        "Um jeito simples de ver o que você já dominou e o que ainda falta.",
+    },
+    {
+      title: "Inglês da vida real",
+      description:
+        "Conteúdo baseado em palavras e frases comuns do dia a dia.",
+    },
   ],
 
   homeFinalTitle: "Comece hoje e mantenha consistência",
@@ -62,6 +90,8 @@ export const dictionary: Dictionary = {
     "Crie sua conta e escolha um modo de treino. Em poucos minutos por dia você já evolui.",
   homeFinalCta: "Cadastrar",
   homeFinalSecondaryCta: "Entrar",
+
+  homeFooterText: "© 2025 Aprenda Inglês (MVP). Todos os direitos reservados.",
 
   // Dashboard (logged-in home)
   dashboardTitle: "Seu painel",
