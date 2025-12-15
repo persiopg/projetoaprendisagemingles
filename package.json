@@ -12,7 +12,9 @@
     "count:words": "node ./scripts/countWords2000Status.mjs"
   },
   "dependencies": {
+    "@types/diff": "^7.0.2",
     "bcryptjs": "^3.0.3",
+    "diff": "^8.0.2",
     "most-common-words-by-language": "^3.0.14",
     "mysql2": "^3.15.3",
     "next": "16.0.10",

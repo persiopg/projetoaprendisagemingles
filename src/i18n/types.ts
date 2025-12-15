@@ -11,6 +11,7 @@ export type Dictionary = {
   nav2000Words: string;
   navFlashcards: string;
   navShadowing: string;
+  navDictation: string;
 
   ctaPrimary: string;
 

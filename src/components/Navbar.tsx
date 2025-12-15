@@ -38,6 +38,12 @@ export function Navbar({ dictionary, locale, session }: NavbarProps) {
             >
               {dictionary.navShadowing}
             </Link>
+            <Link
+              href={`/${locale}/ditado`}
+              className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+            >
+              {dictionary.navDictation}
+            </Link>
           </div>
         </div>
         <div className="flex items-center gap-4">

@@ -13,6 +13,7 @@ export const dictionary: Dictionary = {
   nav2000Words: "2000 Palavras",
   navFlashcards: "Flashcards",
   navShadowing: "Shadowing",
+  navDictation: "Ditado",
 
   ctaPrimary: "Começar pelo básico",
 
