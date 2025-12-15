@@ -42,3 +42,5 @@ next-env.d.ts
 
 # Downloads do Tatoeba (muito grandes)
 /data/tatoeba/
+
+/src/generated/prisma
