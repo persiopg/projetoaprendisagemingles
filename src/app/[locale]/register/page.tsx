@@ -1,10 +1,16 @@
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
+import { useState, useEffect } from "react";
+import { useRouter, useParams } from "next/navigation";
 import Link from "next/link";
+import { getDictionary } from "@/i18n/getDictionary";
+import { Locale } from "@/i18n/locales";
 
-export default function RegisterPage({ params }: { params: Promise<{ locale: string }> }) {
+export default function RegisterPage() {
+  const params = useParams();
+  const locale = (params.locale as Locale) || "pt-br";
+  const dict = getDictionary(locale);
+
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
@@ -29,27 +35,39 @@ export default function RegisterPage({ params }: { params: Promise<{ locale: str
       });
 
       if (res.ok) {
-        const { locale } = await params;
         router.push(`/${locale}/login`);
       } else {
         const data = await res.json();
-        setError(data.message || "Erro ao registrar");
+        setError(data.message || dict.registerErrorGeneric);
       }
     } catch (error) {
-      setError("Ocorreu um erro ao registrar");
+      setError(dict.registerErrorGeneric);
     }
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-center bg-gray-50 dark:bg-gray-900 px-4 py-12 sm:px-6 lg:px-8">
-      <div className="w-full max-w-md space-y-8">
-        <div>
-          <h2 className="mt-6 text-center text-3xl font-bold tracking-tight text-gray-900 dark:text-white">
-            Crie sua conta
-          </h2>
-        </div>
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="-space-y-px rounded-md shadow-sm">
+    <div className="relative min-h-screen w-full flex items-center justify-center overflow-hidden bg-[#2b1055]">
+      {/* Background Elements */}
+      <div className="absolute inset-0 bg-gradient-to-b from-[#9c27b0] via-[#2b1055] to-[#2b1055] opacity-80"></div>
+      
+      {/* Stars (simulated) */}
+      <div className="absolute top-10 left-10 w-1 h-1 bg-white rounded-full opacity-70 animate-pulse"></div>
+      <div className="absolute top-20 right-20 w-1 h-1 bg-white rounded-full opacity-50 animate-pulse delay-75"></div>
+      <div className="absolute top-40 left-1/4 w-1 h-1 bg-white rounded-full opacity-60 animate-pulse delay-150"></div>
+      <div className="absolute bottom-1/3 right-10 w-1 h-1 bg-white rounded-full opacity-40 animate-pulse delay-300"></div>
+      
+      {/* Mountain Silhouette */}
+      <div className="absolute bottom-0 left-0 right-0 h-1/3 bg-gradient-to-t from-black/80 to-transparent"></div>
+      <div className="absolute -bottom-20 -left-20 w-[150%] h-64 bg-[#1c0522] rounded-[100%] blur-xl transform -rotate-2 opacity-80"></div>
+
+      {/* Glass Card */}
+      <div className="relative z-10 w-full max-w-[350px] p-8 rounded-2xl bg-white/10 backdrop-blur-md border border-white/20 shadow-2xl">
+        <h2 className="text-3xl font-light text-white text-center mb-8 tracking-wide">
+          {dict.registerTitle}
+        </h2>
+        
+        <form onSubmit={handleSubmit} className="space-y-5">
+          <div className="space-y-4">
             <div>
               <input
                 id="name"
@@ -57,8 +75,8 @@ export default function RegisterPage({ params }: { params: Promise<{ locale: str
                 type="text"
                 autoComplete="name"
                 required
-                className="relative block w-full rounded-t-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 px-3"
-                placeholder="Nome"
+                className="w-full bg-transparent border border-white/30 rounded-full px-4 py-2.5 text-white placeholder-white/60 focus:outline-none focus:border-white focus:ring-1 focus:ring-white/50 transition-all text-sm"
+                placeholder={dict.registerNamePlaceholder}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
               />
@@ -70,8 +88,8 @@ export default function RegisterPage({ params }: { params: Promise<{ locale: str
                 type="email"
                 autoComplete="email"
                 required
-                className="relative block w-full border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 px-3"
-                placeholder="Endereço de email"
+                className="w-full bg-transparent border border-white/30 rounded-full px-4 py-2.5 text-white placeholder-white/60 focus:outline-none focus:border-white focus:ring-1 focus:ring-white/50 transition-all text-sm"
+                placeholder={dict.registerEmailPlaceholder}
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -83,8 +101,8 @@ export default function RegisterPage({ params }: { params: Promise<{ locale: str
                 type="password"
                 autoComplete="new-password"
                 required
-                className="relative block w-full rounded-b-md border-0 py-1.5 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:z-10 focus:ring-2 focus:ring-inset focus:ring-blue-600 sm:text-sm sm:leading-6 px-3"
-                placeholder="Senha"
+                className="w-full bg-transparent border border-white/30 rounded-full px-4 py-2.5 text-white placeholder-white/60 focus:outline-none focus:border-white focus:ring-1 focus:ring-white/50 transition-all text-sm"
+                placeholder={dict.registerPasswordPlaceholder}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
               />
@@ -92,22 +110,20 @@ export default function RegisterPage({ params }: { params: Promise<{ locale: str
           </div>
 
           {error && (
-            <div className="text-red-500 text-sm text-center">{error}</div>
+            <div className="text-red-300 text-xs text-center bg-red-900/20 py-1 rounded">{error}</div>
           )}
 
-          <div>
-            <button
-              type="submit"
-              className="group relative flex w-full justify-center rounded-md bg-blue-600 px-3 py-2 text-sm font-semibold text-white hover:bg-blue-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600"
-            >
-              Registrar
-            </button>
-          </div>
-
-          <div className="text-center text-sm">
-             Já tem uma conta?{" "}
-             <Link href="login" className="font-medium text-blue-600 hover:text-blue-500">
-               Faça login
+          <button
+            type="submit"
+            className="w-full bg-white/10 hover:bg-white/20 border border-white/40 text-white rounded-full py-2.5 transition-all uppercase tracking-wider text-sm font-medium mt-4 shadow-lg hover:shadow-white/10"
+          >
+            {dict.registerButton}
+          </button>
+          
+          <div className="text-center text-xs text-white/70 mt-6">
+             {dict.registerHasAccount}{" "}
+             <Link href={`/${locale}/login`} className="font-bold text-white hover:underline">
+               {dict.registerLoginLink}
              </Link>
           </div>
         </form>

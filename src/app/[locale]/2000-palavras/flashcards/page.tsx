@@ -25,7 +25,7 @@ export default async function FlashcardsPage({
         </p>
       </div>
 
-      <FlashcardGame initialWords={words} />
+      <FlashcardGame initialWords={words} totalLearnedCount={0} totalWordCount={words.length} />
     </div>
   );
 }

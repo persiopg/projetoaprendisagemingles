@@ -43,4 +43,24 @@ export const dictionary: Dictionary = {
     "Abre portas para vagas internacionais",
     "Pode ser divertido e recompensador",
   ],
+
+  // Auth
+  loginTitle: "entrar",
+  loginEmailPlaceholder: "Usuário (Email)",
+  loginPasswordPlaceholder: "senha",
+  loginForgotPassword: "esqueceu a senha?",
+  loginButton: "Entrar",
+  loginNoAccount: "Não tem uma conta?",
+  loginRegisterLink: "Registre-se",
+  loginErrorInvalid: "Email ou senha inválidos",
+  loginErrorGeneric: "Ocorreu um erro ao fazer login",
+
+  registerTitle: "registrar",
+  registerNamePlaceholder: "Nome Completo",
+  registerEmailPlaceholder: "Endereço de Email",
+  registerPasswordPlaceholder: "Senha",
+  registerButton: "Registrar",
+  registerHasAccount: "Já tem uma conta?",
+  registerLoginLink: "Entrar",
+  registerErrorGeneric: "Ocorreu um erro ao registrar",
 };

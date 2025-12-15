@@ -20,4 +20,24 @@ export type Dictionary = {
   topics: string[];
   advantages: string[];
   reasons: string[];
+
+  // Auth
+  loginTitle: string;
+  loginEmailPlaceholder: string;
+  loginPasswordPlaceholder: string;
+  loginForgotPassword: string;
+  loginButton: string;
+  loginNoAccount: string;
+  loginRegisterLink: string;
+  loginErrorInvalid: string;
+  loginErrorGeneric: string;
+
+  registerTitle: string;
+  registerNamePlaceholder: string;
+  registerEmailPlaceholder: string;
+  registerPasswordPlaceholder: string;
+  registerButton: string;
+  registerHasAccount: string;
+  registerLoginLink: string;
+  registerErrorGeneric: string;
 };
