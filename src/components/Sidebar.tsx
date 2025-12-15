@@ -105,7 +105,7 @@ export function Sidebar({ dictionary, locale, session }: SidebarProps) {
       </div>
 
       {/* Navigation Items */}
-      <nav className="flex-1 py-6 space-y-2 px-3 overflow-y-auto">
+      <nav className="flex-1 py-6 space-y-2 px-3 overflow-y-auto overflow-x-hidden [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]">
         {navItems.map((item) => {
           const active = isActive(item.href, item.exact);
           return (
