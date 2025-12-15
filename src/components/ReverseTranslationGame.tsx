@@ -6,9 +6,14 @@ import * as Diff from "diff";
 interface ReverseTranslationGameProps {
   sentences: { text: string; translation: string | null }[];
   onComplete: (score: number, total: number) => void;
+  onAnswered?: (payload: {
+    index: number;
+    userText: string;
+    isCorrect: boolean;
+  }) => void;
 }
 
-export function ReverseTranslationGame({ sentences, onComplete }: ReverseTranslationGameProps) {
+export function ReverseTranslationGame({ sentences, onComplete, onAnswered }: ReverseTranslationGameProps) {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [userInput, setUserInput] = useState("");
   const [showResult, setShowResult] = useState(false);
@@ -54,6 +59,12 @@ export function ReverseTranslationGame({ sentences, onComplete }: ReverseTransla
     if (isCorrect) {
         setScore(prev => prev + 1);
     }
+
+    onAnswered?.({
+      index: currentIndex,
+      userText: userInput,
+      isCorrect,
+    });
 
     setShowResult(true);
   };
