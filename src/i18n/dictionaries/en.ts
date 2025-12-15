@@ -6,6 +6,79 @@ export const dictionary: Dictionary = {
   languageLabel: "Language",
   mvpNote: "Initial content (MVP). Lessons come next.",
 
+  // Home (landing)
+  navExamples: "Examples",
+  navBenefits: "Benefits",
+  navGetStarted: "Get started",
+
+  homeHeroTitle: "Practice English with quick, focused drills",
+  homeHeroSubtitle:
+    "Flashcards, shadowing, dictation, and reverse translation to turn study into daily practice — with progress and consistency.",
+  homeHeroPrimaryCta: "Create account",
+  homeHeroSecondaryCta: "I already have an account",
+
+  homeExamplesTitle: "Examples of what you can practice",
+  homeExamples: [
+    {
+      title: "Flashcards (2000 words)",
+      description:
+        "Build vocabulary with cards and examples. Great for foundations and speed.",
+      path: "/2000-palavras/flashcards",
+      cta: "Open flashcards",
+    },
+    {
+      title: "Shadowing",
+      description:
+        "Listen and repeat almost at the same time. Trains pronunciation, rhythm, and listening.",
+      path: "/shadowing",
+      cta: "Train shadowing",
+    },
+    {
+      title: "Dictation",
+      description:
+        "Listen to the audio and type exactly what you hear. Great for listening + writing.",
+      path: "/ditado",
+      cta: "Do dictation",
+    },
+    {
+      title: "Reverse Translation",
+      description:
+        "Read in Portuguese and write in English. Forces you to build sentences in the target language.",
+      path: "/traducao-reversa",
+      cta: "Practice translation",
+    },
+  ],
+
+  homeBenefitsTitle: "Benefits of learning with us",
+  homeBenefits: [
+    "Short, repeatable sessions: easy to practice daily.",
+    "Skill-based activities (listening, speaking, writing, and vocabulary).",
+    "User progress tracking: see what you’ve mastered and what’s next.",
+    "Content based on common real-life words and phrases.",
+  ],
+
+  homeFinalTitle: "Start today and stay consistent",
+  homeFinalSubtitle:
+    "Create your account and pick a training mode. A few minutes a day already adds up.",
+  homeFinalCta: "Sign up",
+  homeFinalSecondaryCta: "Log in",
+
+  // Dashboard (logged-in home)
+  dashboardTitle: "Your dashboard",
+  dashboardSubtitle: "Track your progress and keep practicing.",
+  dashboardLearnedTitle: "Learned words/phrases",
+  dashboardFlashcardsLearnedLabel: "Flashcards (words)",
+  dashboardShadowingLearnedLabel: "Shadowing (phrases)",
+  dashboardTotalLearnedLabel: "Total (sum)",
+  dashboardBestScoresTitle: "Best scores",
+  dashboardBestDictationLabel: "Dictation (highest score)",
+  dashboardBestReverseTranslationLabel: "Reverse Translation (highest score)",
+  dashboardBestOverallLabel: "Best overall",
+  dashboardCtaTitle: "Pick a drill for now",
+  dashboardCtaSubtitle: "Suggestion: do 5–10 minutes and stop on a high note.",
+  dashboardCtaPrimary: "Continue Shadowing",
+  dashboardCtaSecondary: "Review Flashcards",
+
   navTopics: "Main topics",
   navAdvantages: "Advantages",
   navReasons: "Reasons",

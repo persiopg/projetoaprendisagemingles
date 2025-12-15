@@ -4,6 +4,48 @@ export type Dictionary = {
   languageLabel: string;
   mvpNote: string;
 
+  // Home (landing)
+  navExamples: string;
+  navBenefits: string;
+  navGetStarted: string;
+
+  homeHeroTitle: string;
+  homeHeroSubtitle: string;
+  homeHeroPrimaryCta: string;
+  homeHeroSecondaryCta: string;
+
+  homeExamplesTitle: string;
+  homeExamples: Array<{
+    title: string;
+    description: string;
+    path: string;
+    cta: string;
+  }>;
+
+  homeBenefitsTitle: string;
+  homeBenefits: string[];
+
+  homeFinalTitle: string;
+  homeFinalSubtitle: string;
+  homeFinalCta: string;
+  homeFinalSecondaryCta: string;
+
+  // Dashboard (logged-in home)
+  dashboardTitle: string;
+  dashboardSubtitle: string;
+  dashboardLearnedTitle: string;
+  dashboardFlashcardsLearnedLabel: string;
+  dashboardShadowingLearnedLabel: string;
+  dashboardTotalLearnedLabel: string;
+  dashboardBestScoresTitle: string;
+  dashboardBestDictationLabel: string;
+  dashboardBestReverseTranslationLabel: string;
+  dashboardBestOverallLabel: string;
+  dashboardCtaTitle: string;
+  dashboardCtaSubtitle: string;
+  dashboardCtaPrimary: string;
+  dashboardCtaSecondary: string;
+
   navTopics: string;
   navAdvantages: string;
   navReasons: string;

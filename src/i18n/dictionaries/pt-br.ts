@@ -6,6 +6,79 @@ export const dictionary: Dictionary = {
   languageLabel: "Idioma",
   mvpNote: "Conteúdo inicial (MVP). As lições virão em seguida.",
 
+  // Home (landing)
+  navExamples: "Exemplos",
+  navBenefits: "Vantagens",
+  navGetStarted: "Começar",
+
+  homeHeroTitle: "Pratique inglês com treinos rápidos e objetivos",
+  homeHeroSubtitle:
+    "Flashcards, shadowing, ditado e tradução reversa para transformar estudo em prática diária — com progresso e consistência.",
+  homeHeroPrimaryCta: "Criar conta",
+  homeHeroSecondaryCta: "Já tenho conta",
+
+  homeExamplesTitle: "Exemplos do que você encontra aqui",
+  homeExamples: [
+    {
+      title: "Flashcards (2000 palavras)",
+      description:
+        "Memorize vocabulário com cartões e exemplos. Ideal para criar base e ganhar velocidade.",
+      path: "/2000-palavras/flashcards",
+      cta: "Ver flashcards",
+    },
+    {
+      title: "Shadowing",
+      description:
+        "Ouça e repita quase ao mesmo tempo. Treina pronúncia, ritmo e compreensão oral.",
+      path: "/shadowing",
+      cta: "Treinar shadowing",
+    },
+    {
+      title: "Ditado",
+      description:
+        "Escute o áudio e digite exatamente o que ouvir. Ótimo para listening + escrita.",
+      path: "/ditado",
+      cta: "Fazer ditado",
+    },
+    {
+      title: "Tradução Reversa",
+      description:
+        "Leia em português e escreva em inglês. Força seu cérebro a construir frases na língua alvo.",
+      path: "/traducao-reversa",
+      cta: "Praticar tradução",
+    },
+  ],
+
+  homeBenefitsTitle: "Vantagens de aprender com a gente",
+  homeBenefits: [
+    "Treinos curtos e repetíveis: dá para praticar todos os dias.",
+    "Atividades focadas em habilidade (ouvir, falar, escrever e vocabulário).",
+    "Progresso por usuário: você vê o que já dominou e o que falta.",
+    "Conteúdo baseado em palavras e frases comuns do dia a dia.",
+  ],
+
+  homeFinalTitle: "Comece hoje e mantenha consistência",
+  homeFinalSubtitle:
+    "Crie sua conta e escolha um modo de treino. Em poucos minutos por dia você já evolui.",
+  homeFinalCta: "Cadastrar",
+  homeFinalSecondaryCta: "Entrar",
+
+  // Dashboard (logged-in home)
+  dashboardTitle: "Seu painel",
+  dashboardSubtitle: "Acompanhe seu progresso e volte a praticar.",
+  dashboardLearnedTitle: "Palavras/frases aprendidas",
+  dashboardFlashcardsLearnedLabel: "Flashcards (palavras)",
+  dashboardShadowingLearnedLabel: "Shadowing (frases)",
+  dashboardTotalLearnedLabel: "Total (soma)",
+  dashboardBestScoresTitle: "Melhores scores",
+  dashboardBestDictationLabel: "Ditado (maior score)",
+  dashboardBestReverseTranslationLabel: "Tradução Reversa (maior score)",
+  dashboardBestOverallLabel: "Melhor geral",
+  dashboardCtaTitle: "Escolha um treino para agora",
+  dashboardCtaSubtitle: "Sugestão: faça 5–10 minutos e pare no auge.",
+  dashboardCtaPrimary: "Continuar no Shadowing",
+  dashboardCtaSecondary: "Revisar Flashcards",
+
   navTopics: "Principais tópicos",
   navAdvantages: "Vantagens",
   navReasons: "Motivos",
