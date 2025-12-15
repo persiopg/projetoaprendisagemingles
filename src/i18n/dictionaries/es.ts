@@ -14,6 +14,7 @@ export const dictionary: Dictionary = {
   navFlashcards: "Flashcards",
   navShadowing: "Shadowing",
   navDictation: "Dictado",
+  navReverseTranslation: "Traducción Inversa",
 
   ctaPrimary: "Empezar con lo básico",
 

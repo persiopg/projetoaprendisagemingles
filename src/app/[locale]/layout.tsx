@@ -1,6 +1,6 @@
 import type { ReactNode } from "react";
 import { getDictionary } from "@/i18n/getDictionary";
-import { Navbar } from "@/components/Navbar";
+import { Sidebar } from "@/components/Sidebar";
 import { defaultLocale, isLocale } from "@/i18n/locales";
 import { getServerSession } from "next-auth";
 import { authOptions } from "@/lib/auth";
@@ -18,9 +18,11 @@ export default async function LocaleLayout({
   const session = await getServerSession(authOptions);
 
   return (
-    <div className="min-h-screen flex flex-col">
-      <Navbar dictionary={dictionary} locale={locale} session={session} />
-      <main className="flex-1">{children}</main>
+    <div className="flex h-screen bg-zinc-50 dark:bg-black overflow-hidden">
+      <Sidebar dictionary={dictionary} locale={locale} session={session} />
+      <main className="flex-1 overflow-y-auto h-full">
+        {children}
+      </main>
     </div>
   );
 }

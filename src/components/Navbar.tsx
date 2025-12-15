@@ -44,6 +44,12 @@ export function Navbar({ dictionary, locale, session }: NavbarProps) {
             >
               {dictionary.navDictation}
             </Link>
+            <Link
+              href={`/${locale}/traducao-reversa`}
+              className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+            >
+              {dictionary.navReverseTranslation}
+            </Link>
           </div>
         </div>
         <div className="flex items-center gap-4">
