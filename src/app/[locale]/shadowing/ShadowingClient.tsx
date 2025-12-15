@@ -195,15 +195,17 @@ export function ShadowingClient({ phrases, initialLearnedWords = [], isLoggedIn 
       </div>
 
       {/* Sidebar List */}
-      <div className="w-full lg:w-80 flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm h-full">
+      <div className="w-full lg:w-80 bg-white dark:bg-zinc-900 rounded-xl shadow-lg border border-zinc-200 dark:border-zinc-800 h-full flex flex-col">
         <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 flex-none">
-          <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">Lista do Nível</h3>
-          <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
-            {learned.size} aprendidas neste nível
-          </p>
+          <h3 className="text-base font-semibold text-zinc-800 dark:text-zinc-200 flex items-center gap-2">
+            <span>✓</span> Lista do Nível
+            <span className="text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 px-2 py-0.5 rounded-full">
+              {learned.size}
+            </span>
+          </h3>
         </div>
         
-        <div className="flex-1 overflow-y-auto p-2 space-y-1">
+        <div className="flex-1 overflow-y-auto p-2 space-y-2 custom-scrollbar">
           {phrases.map((phrase, index) => {
             const isLearned = learned.has(phrase.word);
             const isActive = index === currentIndex;
@@ -212,17 +214,22 @@ export function ShadowingClient({ phrases, initialLearnedWords = [], isLoggedIn 
               <button
                 key={index}
                 onClick={() => setCurrentIndex(index)}
-                className={`w-full text-left px-3 py-2 rounded-lg text-sm flex items-center justify-between group transition-colors ${
+                className={`w-full flex justify-between items-center p-3 rounded-lg border transition-colors ${
                   isActive 
-                    ? 'bg-blue-50 text-blue-700 dark:bg-blue-900/20 dark:text-blue-400' 
-                    : 'hover:bg-zinc-100 text-zinc-600 dark:hover:bg-zinc-800 dark:text-zinc-400'
+                    ? 'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800' 
+                    : 'bg-gray-50 dark:bg-zinc-800/50 border-gray-100 dark:border-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-800'
                 }`}
               >
-                <span className="font-medium truncate flex-1 mr-2">{phrase.word}</span>
+                <span className={`font-medium ${isActive ? 'text-blue-700 dark:text-blue-400' : 'text-zinc-700 dark:text-zinc-300'}`}>
+                  {phrase.word}
+                </span>
+                
                 {isLearned && (
-                  <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="text-green-500">
-                    <polyline points="20 6 9 17 4 12"/>
-                  </svg>
+                  <span className="text-green-500">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <polyline points="20 6 9 17 4 12"/>
+                    </svg>
+                  </span>
                 )}
               </button>
             );
