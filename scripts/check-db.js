@@ -1,9 +1,15 @@
-const mysql = require('mysql2/promise');
-const fs = require('fs');
-const path = require('path');
+// Use dynamic imports to avoid require() style imports
 
 async function checkDb() {
   try {
+    // Dynamically import modules to avoid require() style imports
+    const mysqlModule = await import('mysql2/promise');
+    const mysql = mysqlModule.default || mysqlModule;
+    const fsModule = await import('fs');
+    const fs = fsModule.default || fsModule;
+    const pathModule = await import('path');
+    const path = pathModule.default || pathModule;
+
     // Ler arquivo .env manualmente para não depender do dotenv
     const envPath = path.join(process.cwd(), '.env');
     const envContent = fs.readFileSync(envPath, 'utf8');
