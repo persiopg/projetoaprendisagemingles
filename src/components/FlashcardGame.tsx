@@ -172,36 +172,33 @@ export default function FlashcardGame({
   };
 
   return (
-    <div className="flex flex-col lg:flex-row items-start justify-center min-h-[80vh] p-4 gap-6 w-full max-w-[95vw] mx-auto">
+    <div className="flex flex-col lg:flex-row items-start justify-center h-full gap-6 w-full">
       {/* Left Column: Game Area */}
-      <div className="flex flex-col items-center w-full lg:flex-1">
-        <div className="w-full max-w-3xl mb-6 p-4 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800">
-          <div className="flex justify-between items-end mb-2">
-            <p className="text-sm font-medium text-blue-800 dark:text-blue-200">
+      <div className="flex flex-col items-center w-full lg:flex-1 h-full min-h-0">
+        <div className="w-full max-w-3xl mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg border border-blue-100 dark:border-blue-800 flex-none">
+          <div className="flex justify-between items-end mb-1">
+            <p className="text-xs font-medium text-blue-800 dark:text-blue-200">
               Total Aprendido (Geral)
             </p>
-            <span className="text-sm font-bold text-blue-900 dark:text-blue-100">
+            <span className="text-xs font-bold text-blue-900 dark:text-blue-100">
               {currentTotalLearned} / {totalWordCount}
             </span>
           </div>
-          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5">
+          <div className="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2">
             <div 
-              className="bg-blue-600 h-2.5 rounded-full transition-all duration-500" 
+              className="bg-blue-600 h-2 rounded-full transition-all duration-500" 
               style={{ width: `${progressPercentage}%` }}
             ></div>
           </div>
-          <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
-            Meta Diária: {words.length} novas palavras para hoje
-          </p>
         </div>
 
-        <div className="w-full max-w-3xl flex justify-between items-center mb-4 text-sm text-gray-500 dark:text-gray-400">
+        <div className="w-full max-w-3xl flex justify-between items-center mb-2 text-xs text-gray-500 dark:text-gray-400 flex-none">
           <span>Palavra {currentIndex + 1} de {words.length}</span>
           <span>Nesta Sessão: {learnedWords.size}</span>
         </div>
 
         <div
-          className="relative w-full max-w-3xl h-[500px] cursor-pointer perspective-[1000px]"
+          className="relative w-full max-w-3xl flex-1 min-h-0 cursor-pointer perspective-[1000px] mb-4"
           style={getSlideStyle()}
           onClick={handleFlip}
         >
@@ -235,7 +232,7 @@ export default function FlashcardGame({
               )}
 
               {currentWord.exampleEn && (
-                <div className="text-center mt-6 space-y-3 max-w-2xl">
+                <div className="text-center mt-6 space-y-3 max-w-2xl overflow-y-auto max-h-[60%]">
                   <p className="text-xl text-gray-700 dark:text-gray-300 italic">
                     &quot;{currentWord.exampleEn}&quot;
                   </p>
@@ -250,14 +247,14 @@ export default function FlashcardGame({
           </div>
         </div>
 
-        <div className="flex flex-col gap-4 mt-8 w-full max-w-3xl">
+        <div className="flex flex-col gap-3 w-full max-w-3xl flex-none">
           <div className="flex justify-between gap-4">
             <button
               onClick={(e) => {
                 e.stopPropagation();
                 handlePrev();
               }}
-              className="flex-1 px-6 py-3 text-lg bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+              className="flex-1 px-4 py-2 text-base bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
             >
               Anterior
             </button>
@@ -266,7 +263,7 @@ export default function FlashcardGame({
                 e.stopPropagation();
                 handleNext();
               }}
-              className="flex-1 px-6 py-3 text-lg bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+              className="flex-1 px-4 py-2 text-base bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
             >
               Próximo
             </button>
@@ -274,7 +271,7 @@ export default function FlashcardGame({
 
           <button
             onClick={toggleLearned}
-            className={`w-full px-6 py-4 rounded-lg font-medium text-lg transition-colors flex items-center justify-center gap-2 ${
+            className={`w-full px-4 py-3 rounded-lg font-medium text-base transition-colors flex items-center justify-center gap-2 ${
               isLearned
                 ? "bg-green-100 text-green-700 hover:bg-green-200 dark:bg-green-900/30 dark:text-green-400"
                 : "bg-gray-100 text-gray-600 hover:bg-gray-200 dark:bg-gray-800 dark:text-gray-400"
@@ -294,15 +291,17 @@ export default function FlashcardGame({
       </div>
 
       {/* Right Column: Learned Words List */}
-      <div className="w-full lg:w-96 bg-white dark:bg-zinc-900 rounded-xl shadow-lg border border-zinc-200 dark:border-zinc-800 p-4 h-[600px] lg:h-[calc(100vh-150px)] flex flex-col sticky top-4">
-        <h3 className="text-lg font-semibold mb-4 text-zinc-800 dark:text-zinc-200 flex items-center gap-2">
-          <span>✓</span> Palavras Aprendidas
-          <span className="text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 px-2 py-0.5 rounded-full">
-            {learnedWords.size}
-          </span>
-        </h3>
+      <div className="w-full lg:w-80 bg-white dark:bg-zinc-900 rounded-xl shadow-lg border border-zinc-200 dark:border-zinc-800 h-full flex flex-col">
+        <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 flex-none">
+          <h3 className="text-base font-semibold text-zinc-800 dark:text-zinc-200 flex items-center gap-2">
+            <span>✓</span> Palavras Aprendidas
+            <span className="text-xs bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-400 px-2 py-0.5 rounded-full">
+              {learnedWords.size}
+            </span>
+          </h3>
+        </div>
         
-        <div className="flex-1 overflow-y-auto pr-2 space-y-2 custom-scrollbar">
+        <div className="flex-1 overflow-y-auto p-2 space-y-2 custom-scrollbar">
           {words.filter(w => learnedWords.has(w.word)).length === 0 ? (
             <p className="text-sm text-gray-500 text-center mt-10">
               Nenhuma palavra aprendida neste nível ainda.

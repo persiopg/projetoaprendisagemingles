@@ -50,20 +50,22 @@ export default async function MyFlashcardsPage({
   const dailyBatch = validWords.slice(start, end);
   
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="mb-6">
+    <div className="container mx-auto px-4 py-4 h-[calc(100vh-4rem)] flex flex-col">
+      <div className="mb-4 flex-none">
         <h1 className="text-3xl font-bold mb-2">Meus Flashcards</h1>
         <p className="text-gray-600 dark:text-gray-400">
           Bem-vindo, {session.user?.name}! Aqui você pode praticar suas palavras.
         </p>
       </div>
 
-      <FlashcardGame 
-        initialWords={dailyBatch} 
-        initialLearnedWords={Array.from(learnedWords)}
-        totalLearnedCount={learnedWords.size}
-        totalWordCount={validWords.length}
-      />
+      <div className="flex-1 min-h-0">
+        <FlashcardGame 
+          initialWords={dailyBatch} 
+          initialLearnedWords={Array.from(learnedWords)}
+          totalLearnedCount={learnedWords.size}
+          totalWordCount={validWords.length}
+        />
+      </div>
     </div>
   );
 }

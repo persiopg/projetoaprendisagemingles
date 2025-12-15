@@ -89,9 +89,9 @@ export function ShadowingClient({ phrases, initialLearnedWords = [], isLoggedIn 
   const isCurrentLoading = loading === currentPhrase.word;
 
   return (
-    <div className="flex flex-col lg:flex-row gap-8 h-[calc(100vh-200px)] min-h-[500px]">
+    <div className="flex flex-col lg:flex-row gap-4 h-full">
       {/* Main Card Area */}
-      <div className="flex-1 flex flex-col">
+      <div className="flex-1 flex flex-col min-h-0">
         <div className={`flex-1 p-8 rounded-2xl shadow-lg border flex flex-col justify-center items-center text-center transition-all relative ${
           isCurrentLearned 
             ? 'bg-green-50 dark:bg-green-900/10 border-green-200 dark:border-green-800' 
@@ -165,7 +165,7 @@ export function ShadowingClient({ phrases, initialLearnedWords = [], isLoggedIn 
         </div>
 
         {/* Navigation Controls */}
-        <div className="flex justify-between items-center mt-6 px-4">
+        <div className="flex justify-between items-center mt-4 px-4 flex-none">
           <button
             onClick={prevCard}
             disabled={currentIndex === 0}
@@ -195,8 +195,8 @@ export function ShadowingClient({ phrases, initialLearnedWords = [], isLoggedIn 
       </div>
 
       {/* Sidebar List */}
-      <div className="w-full lg:w-80 flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm h-[600px] lg:h-auto">
-        <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50">
+      <div className="w-full lg:w-80 flex flex-col bg-white dark:bg-zinc-900 border border-zinc-200 dark:border-zinc-800 rounded-xl overflow-hidden shadow-sm h-full">
+        <div className="p-4 border-b border-zinc-200 dark:border-zinc-800 bg-zinc-50 dark:bg-zinc-900/50 flex-none">
           <h3 className="font-semibold text-zinc-900 dark:text-zinc-100">Lista do Nível</h3>
           <p className="text-xs text-zinc-500 dark:text-zinc-400 mt-1">
             {learned.size} aprendidas neste nível
