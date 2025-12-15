@@ -1,15 +1,22 @@
 import { notFound } from "next/navigation";
+import { redirect } from "next/navigation";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+
+import { authOptions } from "@/lib/auth";
 
 import { getMostCommonEnglishWords2000 } from "@/data/mostCommonEnglishWords2000";
 import { getDictionary } from "@/i18n/getDictionary";
 import { isLocale, type Locale } from "@/i18n/locales";
+
+export const dynamic = "force-dynamic";
 
 export default async function Words2000Page({
 	params,
 }: {
 	params: Promise<{ locale: string }>;
 }) {
+	const session = await getServerSession(authOptions);
 	const { locale: localeParam } = await params;
 
 	if (!isLocale(localeParam)) {
@@ -17,6 +24,11 @@ export default async function Words2000Page({
 	}
 
 	const locale = localeParam as Locale;
+
+	if (!session || !session.user?.email) {
+		redirect(`/${locale}/login?callbackUrl=/${locale}/2000-palavras`);
+	}
+
 	const dict = getDictionary(locale);
 
 	const rows = await getMostCommonEnglishWords2000();

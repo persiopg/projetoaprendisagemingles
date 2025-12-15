@@ -2,6 +2,11 @@ import { getDictionary } from "@/i18n/getDictionary";
 import { Locale } from "@/i18n/locales";
 import { getMostCommonEnglishWords2000 } from "@/data/mostCommonEnglishWords2000";
 import { DictationClient } from "./DictationClient";
+import { getServerSession } from "next-auth";
+import { authOptions } from "@/lib/auth";
+import { redirect } from "next/navigation";
+
+export const dynamic = "force-dynamic";
 
 export default async function DictationPage({
   params,
@@ -9,6 +14,12 @@ export default async function DictationPage({
   params: Promise<{ locale: string }>;
 }) {
   const { locale } = await params;
+
+  const session = await getServerSession(authOptions);
+  if (!session || !session.user?.email) {
+    redirect(`/${locale}/login?callbackUrl=/${locale}/ditado`);
+  }
+
   const dict = getDictionary(locale as Locale);
   
   const words = await getMostCommonEnglishWords2000();

@@ -1,13 +1,25 @@
 import { getMostCommonEnglishWords2000 } from "@/data/mostCommonEnglishWords2000";
 import FlashcardGame from "@/components/FlashcardGame";
 import Link from "next/link";
+import { getServerSession } from "next-auth";
+import { redirect } from "next/navigation";
+
+import { authOptions } from "@/lib/auth";
+
+export const dynamic = "force-dynamic";
 
 export default async function FlashcardsPage({
   params,
 }: {
   params: Promise<{ locale: string }>;
 }) {
+  const session = await getServerSession(authOptions);
   const { locale } = await params;
+
+  if (!session || !session.user?.email) {
+    redirect(`/${locale}/login?callbackUrl=/${locale}/2000-palavras/flashcards`);
+  }
+
   const words = await getMostCommonEnglishWords2000();
 
   return (
