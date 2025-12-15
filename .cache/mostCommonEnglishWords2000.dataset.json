@@ -4598,11 +4598,11 @@
     "examplePtBr": "MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS FOR TODAY. NEXT AVAILABLE IN  07 HOURS 42 MINUTES 17 SECONDS VISIT HTTPS://MYMEMORY.TRANSLATED.NET/DOC/USAGELIMITS.PHP TO TRANSLATE MORE",
     "context": "Cotidiano (assuntos/objetos)"
   },
-  "porn": {
-    "word": "porn",
-    "translationPtBr": "MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS FOR TODAY. NEXT AVAILABLE IN  07 HOURS 42 MINUTES 15 SECONDS VISIT HTTPS://MYMEMORY.TRANSLATED.NET/DOC/USAGELIMITS.PHP TO TRANSLATE MORE",
-    "exampleEn": "I need porn for this project.",
-    "examplePtBr": "MYMEMORY WARNING: YOU USED ALL AVAILABLE FREE TRANSLATIONS FOR TODAY. NEXT AVAILABLE IN  07 HOURS 42 MINUTES 15 SECONDS VISIT HTTPS://MYMEMORY.TRANSLATED.NET/DOC/USAGELIMITS.PHP TO TRANSLATE MORE",
+  "poem": {
+    "word": "poem",
+    "translationPtBr": "poema",
+    "exampleEn": "I wrote a poem.",
+    "examplePtBr": "Eu escrevi um poema.",
     "context": "Cotidiano (assuntos/objetos)"
   },
   "california": {
