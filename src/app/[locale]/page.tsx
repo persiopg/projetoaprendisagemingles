@@ -66,7 +66,7 @@ export default async function LocaleHome({
                 <h2 className="text-4xl font-semibold leading-tight tracking-tight text-black dark:text-zinc-50">
                   {dict.subtitle}
                 </h2>
-                <p className="max-w-2xl text-lg leading-8 text-zinc-600 dark:text-zinc-400">
+                <p className=" text-lg leading-8 text-zinc-600 dark:text-zinc-400">
                   {locale === "pt-br" &&
                     "Aqui você vai estudar vocabulário, gramática e conversação com foco no dia a dia."}
                   {locale === "en" &&

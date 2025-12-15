@@ -49,7 +49,7 @@ export default async function DictationPage({
       <h1 className="text-3xl font-bold mb-4 text-center text-zinc-900 dark:text-zinc-50">
         {dict.navDictation}
       </h1>
-      <p className="text-center text-zinc-600 dark:text-zinc-400 mb-8 max-w-2xl mx-auto">
+      <p className="text-center text-zinc-600 dark:text-zinc-400 mb-8  mx-auto">
         {locale === 'pt-br' 
           ? "Ouça o áudio e digite exatamente o que você ouvir. As frases são baseadas nas palavras do dia."
           : "Listen to the audio and type exactly what you hear. Sentences are based on today's words."

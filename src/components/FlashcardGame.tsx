@@ -232,7 +232,7 @@ export default function FlashcardGame({
               )}
 
               {currentWord.exampleEn && (
-                <div className="text-center mt-6 space-y-3 max-w-2xl overflow-y-auto max-h-[60%]">
+                <div className="text-center mt-6 space-y-3  overflow-y-auto max-h-[60%]">
                   <p className="text-xl text-gray-700 dark:text-gray-300 italic">
                     &quot;{currentWord.exampleEn}&quot;
                   </p>

@@ -131,7 +131,7 @@ export function ShadowingClient({ phrases, initialLearnedWords = [], isLoggedIn 
               )}
           </div>
 
-          <div className="max-w-2xl w-full space-y-8">
+          <div className=" w-full space-y-8">
             <p className="text-3xl md:text-4xl font-medium text-zinc-900 dark:text-zinc-100 leading-relaxed">
               {currentPhrase.exampleEn}
             </p>

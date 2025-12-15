@@ -78,7 +78,7 @@ export function ReverseTranslationGame({ sentences, onComplete }: ReverseTransla
 
   if (gameFinished) {
       return (
-          <div className="max-w-2xl mx-auto p-8 bg-white dark:bg-zinc-900 rounded-lg shadow-md border border-zinc-200 dark:border-zinc-800 text-center">
+          <div className=" mx-auto p-8 bg-white dark:bg-zinc-900 rounded-lg shadow-md border border-zinc-200 dark:border-zinc-800 text-center">
               <h2 className="text-3xl font-bold mb-4 text-zinc-900 dark:text-zinc-100">Game Over!</h2>
               <div className="text-6xl font-bold text-blue-600 mb-6">
                   {score} / {sentences.length}
@@ -99,7 +99,7 @@ export function ReverseTranslationGame({ sentences, onComplete }: ReverseTransla
   if (!currentSentence) return <div>No sentences available.</div>;
 
   return (
-    <div className="max-w-2xl mx-auto p-6 bg-white dark:bg-zinc-900 rounded-lg shadow-md border border-zinc-200 dark:border-zinc-800">
+    <div className=" mx-auto p-6 bg-white dark:bg-zinc-900 rounded-lg shadow-md border border-zinc-200 dark:border-zinc-800">
       <div className="flex justify-between items-center mb-4">
         <h2 className="text-2xl font-bold text-zinc-900 dark:text-zinc-100">Reverse Translation</h2>
         <span className="text-sm font-medium px-3 py-1 bg-zinc-100 dark:bg-zinc-800 rounded-full text-zinc-600 dark:text-zinc-400">

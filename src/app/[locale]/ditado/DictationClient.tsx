@@ -2,6 +2,7 @@
 
 import { DictationGame } from "@/components/DictationGame";
 import { useRouter } from "next/navigation";
+import { useMemo, useState } from "react";
 
 interface DictationClientProps {
   sentences: { text: string; translation: string | null }[];
@@ -10,6 +11,31 @@ interface DictationClientProps {
 
 export function DictationClient({ sentences, locale }: DictationClientProps) {
   const router = useRouter();
+  const [answeredIndices, setAnsweredIndices] = useState<number[]>([]);
+  const [answersByIndex, setAnswersByIndex] = useState<
+    Record<number, { userText: string; isCorrect: boolean }>
+  >({});
+
+  const speak = (text: string) => {
+    if (typeof window === "undefined") return;
+    if (!("speechSynthesis" in window)) return;
+
+    try {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      utterance.lang = "en-US";
+      window.speechSynthesis.speak(utterance);
+    } catch {
+      // ignore
+    }
+  };
+
+  const answeredSentences = useMemo(() => {
+    return answeredIndices
+      .slice()
+      .sort((a, b) => a - b)
+      .map((idx) => ({ idx, ...sentences[idx] }));
+  }, [answeredIndices, sentences]);
 
   const handleComplete = async (score: number, total: number) => {
     try {
@@ -29,6 +55,119 @@ export function DictationClient({ sentences, locale }: DictationClientProps) {
   };
 
   return (
-    <DictationGame sentences={sentences} onComplete={handleComplete} />
+    <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 items-start">
+      <div>
+        <DictationGame
+          sentences={sentences}
+          onComplete={handleComplete}
+          onAnswered={({ index, userText, isCorrect }) => {
+            setAnsweredIndices((prev) => (prev.includes(index) ? prev : [...prev, index]));
+            setAnswersByIndex((prev) => ({
+              ...prev,
+              [index]: { userText, isCorrect },
+            }));
+          }}
+        />
+      </div>
+
+      <aside
+        aria-label={
+          locale === "pt-br"
+            ? "Lista das frases respondidas"
+            : "List of answered sentences"
+        }
+        className="p-5 bg-white dark:bg-zinc-900 rounded-lg shadow-md border border-zinc-200 dark:border-zinc-800"
+      >
+        <h2 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+          {locale === "pt-br" ? "Frases respondidas" : "Answered sentences"}
+        </h2>
+        <p className="mt-1 text-sm text-zinc-600 dark:text-zinc-400">
+          {locale === "pt-br"
+            ? "Aqui aparecem apenas as frases que você já respondeu, com a tradução."
+            : "Only the sentences you already answered appear here, with translation."}
+        </p>
+
+        {answeredSentences.length === 0 ? (
+          <div className="mt-4 text-sm text-zinc-500">
+            {locale === "pt-br"
+              ? "Nenhuma frase respondida ainda."
+              : "No answered sentences yet."}
+          </div>
+        ) : (
+          <ol className="mt-4 space-y-4 text-sm">
+            {answeredSentences.map((s) => {
+              const answer = answersByIndex[s.idx];
+              const isCorrect = answer?.isCorrect ?? false;
+              const userText = answer?.userText ?? "";
+
+              return (
+              <li key={`${s.idx}-${s.text.slice(0, 16)}`} className="space-y-1">
+                <div className="flex items-center justify-between gap-3">
+                  <div className="font-medium text-zinc-900 dark:text-zinc-100">
+                    {s.idx + 1}.
+                  </div>
+                  <span
+                    className={`shrink-0 text-xs font-semibold px-2 py-1 rounded-full border ${
+                      isCorrect
+                        ? "bg-green-50 text-green-700 border-green-200 dark:bg-green-900/20 dark:text-green-300 dark:border-green-900/50"
+                        : "bg-red-50 text-red-700 border-red-200 dark:bg-red-900/20 dark:text-red-300 dark:border-red-900/50"
+                    }`}
+                  >
+                    {locale === "pt-br" ? (isCorrect ? "Acertou" : "Errou") : isCorrect ? "Correct" : "Wrong"}
+                  </span>
+                </div>
+
+                <div>
+                  <div className="text-xs font-semibold text-zinc-500 uppercase">
+                    {locale === "pt-br" ? "Frase certa" : "Correct sentence"}
+                  </div>
+                  <div className="mt-1 flex items-start justify-between gap-3">
+                    <div className="text-zinc-900 dark:text-zinc-100">{s.text}</div>
+                    <button
+                      type="button"
+                      onClick={() => speak(s.text)}
+                      className="shrink-0 inline-flex items-center justify-center rounded-md border border-zinc-200 dark:border-zinc-700 bg-white dark:bg-zinc-900 px-2 py-1 text-xs font-medium text-zinc-700 dark:text-zinc-200 hover:bg-zinc-50 dark:hover:bg-zinc-800 transition-colors"
+                      aria-label={
+                        locale === "pt-br"
+                          ? "Ouvir a frase novamente"
+                          : "Listen to the sentence again"
+                      }
+                      title={locale === "pt-br" ? "Ouvir" : "Listen"}
+                    >
+                      {locale === "pt-br" ? "Ouvir" : "Listen"}
+                    </button>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-xs font-semibold text-zinc-500 uppercase">
+                    {locale === "pt-br" ? "Tradução" : "Translation"}
+                  </div>
+                  <div className="text-zinc-600 dark:text-zinc-400 italic">
+                    {s.translation ? `“${s.translation}”` : "—"}
+                  </div>
+                </div>
+
+                <div>
+                  <div className="text-xs font-semibold text-zinc-500 uppercase">
+                    {locale === "pt-br" ? "Sua frase" : "Your sentence"}
+                  </div>
+                  <div
+                    className={
+                      isCorrect
+                        ? "text-zinc-900 dark:text-zinc-100"
+                        : "text-red-700 dark:text-red-300"
+                    }
+                  >
+                    {userText.trim() ? userText : "—"}
+                  </div>
+                </div>
+              </li>
+              );
+            })}
+          </ol>
+        )}
+      </aside>
+    </div>
   );
 }

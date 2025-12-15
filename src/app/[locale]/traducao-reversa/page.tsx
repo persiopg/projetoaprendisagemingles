@@ -48,7 +48,7 @@ export default async function ReverseTranslationPage({
       <h1 className="text-3xl font-bold mb-4 text-center text-zinc-900 dark:text-zinc-50">
         {dict.navReverseTranslation}
       </h1>
-      <p className="text-center text-zinc-600 dark:text-zinc-400 mb-8 max-w-2xl mx-auto">
+      <p className="text-center text-zinc-600 dark:text-zinc-400 mb-8  mx-auto">
         {locale === 'pt-br' 
           ? "Leia a frase em português e digite a tradução em inglês. Isso força seu cérebro a construir frases na língua alvo."
           : "Read the Portuguese sentence and type the English translation. This forces your brain to construct sentences in the target language."

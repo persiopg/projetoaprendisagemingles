@@ -62,7 +62,7 @@ export default async function ShadowingPage({
         <h1 className="text-3xl font-bold mb-2 text-zinc-900 dark:text-zinc-50">
           {dictionary.navShadowing}
         </h1>
-        <p className="text-lg text-zinc-600 dark:text-zinc-400 max-w-2xl mb-2">
+        <p className="text-lg text-zinc-600 dark:text-zinc-400  mb-2">
           A técnica de Shadowing consiste em ouvir e repetir o áudio quase simultaneamente. 
         </p>
         
