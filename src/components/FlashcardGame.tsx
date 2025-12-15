@@ -309,15 +309,31 @@ export default function FlashcardGame({
           ) : (
             words
               .filter(w => learnedWords.has(w.word))
-              .map((w) => (
-                <div 
-                  key={w.word}
-                  className="flex justify-between items-center p-3 bg-gray-50 dark:bg-zinc-800/50 rounded-lg border border-gray-100 dark:border-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-800 transition-colors"
-                >
-                  <span className="font-medium text-zinc-700 dark:text-zinc-300">{w.word}</span>
-                  <span className="text-sm text-zinc-500 dark:text-zinc-500">{w.translationPtBr}</span>
-                </div>
-              ))
+              .map((w) => {
+                const isSelected = currentWord.word === w.word;
+                return (
+                  <button 
+                    key={w.word}
+                    onClick={() => {
+                      const index = words.findIndex(word => word.word === w.word);
+                      if (index !== -1) {
+                          setIsFlipped(false);
+                          setCurrentIndex(index);
+                      }
+                    }}
+                    className={`w-full flex justify-between items-center p-3 rounded-lg border transition-colors text-left ${
+                      isSelected 
+                        ? 'bg-blue-50 border-blue-200 dark:bg-blue-900/20 dark:border-blue-800' 
+                        : 'bg-gray-50 dark:bg-zinc-800/50 border-gray-100 dark:border-zinc-800 hover:bg-gray-100 dark:hover:bg-zinc-800'
+                    }`}
+                  >
+                    <span className={`font-medium ${isSelected ? 'text-blue-700 dark:text-blue-400' : 'text-zinc-700 dark:text-zinc-300'}`}>
+                      {w.word}
+                    </span>
+                    <span className="text-sm text-zinc-500 dark:text-zinc-500">{w.translationPtBr}</span>
+                  </button>
+                );
+              })
           )}
         </div>
       </div>
