@@ -9,6 +9,7 @@ export type Dictionary = {
   navReasons: string;
   navHome: string;
   nav2000Words: string;
+  navFlashcards: string;
 
   ctaPrimary: string;
 

@@ -1,0 +1,185 @@
+"use client";
+
+import { useState, useEffect } from "react";
+import { MostCommonEnglishWordEntry } from "@/data/mostCommonEnglishWords2000.types";
+
+interface FlashcardGameProps {
+  initialWords: MostCommonEnglishWordEntry[];
+}
+
+export default function FlashcardGame({ initialWords }: FlashcardGameProps) {
+  // Filter words to ensure we only show ones with translations
+  const [words, setWords] = useState<MostCommonEnglishWordEntry[]>([]);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const [isFlipped, setIsFlipped] = useState(false);
+  const [slideState, setSlideState] = useState<
+    "idle" | "exiting-left" | "exiting-right" | "entering-left" | "entering-right"
+  >("idle");
+
+  useEffect(() => {
+    const validWords = initialWords.filter((w) => w.translationPtBr);
+    setWords(validWords);
+  }, [initialWords]);
+
+  if (words.length === 0) {
+    return (
+      <div className="p-8 text-center">
+        <p>Carregando ou nenhuma palavra com tradução disponível...</p>
+      </div>
+    );
+  }
+
+  const currentWord = words[currentIndex];
+
+  const changeCard = (direction: "next" | "prev") => {
+    const isNext = direction === "next";
+    const exitState = isNext ? "exiting-left" : "exiting-right";
+    const enterState = isNext ? "entering-right" : "entering-left";
+
+    setSlideState(exitState);
+
+    setTimeout(() => {
+      if (isNext) {
+        setCurrentIndex((prev) => (prev + 1) % words.length);
+      } else {
+        setCurrentIndex((prev) => (prev - 1 + words.length) % words.length);
+      }
+
+      setSlideState(enterState);
+
+      // Small delay to allow DOM to update with new position before sliding in
+      requestAnimationFrame(() => {
+        requestAnimationFrame(() => {
+          setSlideState("idle");
+        });
+      });
+    }, 300);
+  };
+
+  const handleNext = () => {
+    if (isFlipped) {
+      setIsFlipped(false);
+      setTimeout(() => {
+        changeCard("next");
+      }, 300);
+    } else {
+      changeCard("next");
+    }
+  };
+
+  const handlePrev = () => {
+    if (isFlipped) {
+      setIsFlipped(false);
+      setTimeout(() => {
+        changeCard("prev");
+      }, 300);
+    } else {
+      changeCard("prev");
+    }
+  };
+
+  const handleFlip = () => {
+    if (slideState === "idle") {
+      setIsFlipped(!isFlipped);
+    }
+  };
+
+  const getSlideStyle = () => {
+    const baseTransition = "transform 300ms ease-in-out, opacity 300ms ease-in-out";
+    switch (slideState) {
+      case "exiting-left":
+        return { transform: "translateX(-150%)", opacity: 0, transition: baseTransition };
+      case "exiting-right":
+        return { transform: "translateX(150%)", opacity: 0, transition: baseTransition };
+      case "entering-left":
+        return { transform: "translateX(-150%)", opacity: 0, transition: "none" };
+      case "entering-right":
+        return { transform: "translateX(150%)", opacity: 0, transition: "none" };
+      case "idle":
+        return { transform: "translateX(0)", opacity: 1, transition: baseTransition };
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center justify-center min-h-[60vh] p-4 overflow-hidden">
+      <div className="mb-4 text-sm text-gray-500">
+        Card {currentIndex + 1} de {words.length}
+      </div>
+
+      <div
+        className="relative w-full max-w-md h-80 cursor-pointer"
+        style={{ perspective: "1000px", ...getSlideStyle() }}
+        onClick={handleFlip}
+      >
+        <div
+          className="relative w-full h-full transition-transform duration-500"
+          style={{ 
+            transformStyle: "preserve-3d", 
+            transform: isFlipped ? "rotateY(180deg)" : "rotateY(0deg)" 
+          }}
+        >
+          {/* Front */}
+          <div
+            className="absolute w-full h-full bg-white dark:bg-gray-800 rounded-xl shadow-xl flex flex-col items-center justify-center p-8 border-2 border-blue-100 dark:border-blue-900"
+            style={{ backfaceVisibility: "hidden" }}
+          >
+            <h2 className="text-4xl font-bold text-blue-600 dark:text-blue-400 mb-4">
+              {currentWord.word}
+            </h2>
+            <p className="text-sm text-gray-400 mt-4">Clique para ver a tradução</p>
+          </div>
+
+          {/* Back */}
+          <div
+            className="absolute w-full h-full bg-blue-50 dark:bg-gray-900 rounded-xl shadow-xl flex flex-col items-center justify-center p-8 border-2 border-blue-200 dark:border-blue-800"
+            style={{ backfaceVisibility: "hidden", transform: "rotateY(180deg)" }}
+          >
+            <h3 className="text-2xl font-semibold text-gray-800 dark:text-gray-100 mb-2">
+              {currentWord.translationPtBr}
+            </h3>
+            
+            {currentWord.context && (
+              <span className="text-xs bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded-full mb-4">
+                {currentWord.context}
+              </span>
+            )}
+
+            {currentWord.exampleEn && (
+              <div className="text-center mt-4 space-y-2">
+                <p className="text-lg text-gray-700 dark:text-gray-300 italic">
+                  "{currentWord.exampleEn}"
+                </p>
+                {currentWord.examplePtBr && (
+                  <p className="text-md text-gray-500 dark:text-gray-400">
+                    "{currentWord.examplePtBr}"
+                  </p>
+                )}
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+
+      <div className="flex gap-4 mt-8">
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handlePrev();
+          }}
+          className="px-6 py-2 bg-gray-200 dark:bg-gray-700 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 transition-colors"
+        >
+          Anterior
+        </button>
+        <button
+          onClick={(e) => {
+            e.stopPropagation();
+            handleNext();
+          }}
+          className="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+        >
+          Próximo
+        </button>
+      </div>
+    </div>
+  );
+}

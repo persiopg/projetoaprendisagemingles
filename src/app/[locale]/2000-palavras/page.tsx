@@ -1,4 +1,5 @@
 import { notFound } from "next/navigation";
+import Link from "next/link";
 
 import { getMostCommonEnglishWords2000 } from "@/data/mostCommonEnglishWords2000";
 import { getDictionary } from "@/i18n/getDictionary";
@@ -51,10 +52,18 @@ export default async function Words2000Page({
 	return (
 		<div className="min-h-screen bg-zinc-50 font-sans dark:bg-black">
 			<div className="mx-auto w-full max-w-6xl px-4 py-10 sm:px-6 sm:py-12">
-				<header className="flex flex-col gap-2">
-					<h1 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
-						{labels.title}
-					</h1>
+				<header className="flex flex-col gap-4">
+					<div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+						<h1 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
+							{labels.title}
+						</h1>
+						<Link
+							href={`/${locale}/2000-palavras/flashcards`}
+							className="inline-flex items-center justify-center rounded-lg bg-blue-600 px-4 py-2 text-sm font-medium text-white hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-zinc-900"
+						>
+							Praticar com Flashcards
+						</Link>
+					</div>
 					<p className="text-sm text-zinc-600 dark:text-zinc-400">{dict.mvpNote}</p>
 				</header>
 

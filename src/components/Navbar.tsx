@@ -29,6 +29,12 @@ export function Navbar({ dictionary, locale }: NavbarProps) {
             >
               {dictionary.nav2000Words}
             </Link>
+            <Link
+              href={`/${locale}/2000-palavras/flashcards`}
+              className="text-sm font-medium text-zinc-600 hover:text-zinc-900 dark:text-zinc-400 dark:hover:text-zinc-50"
+            >
+              {dictionary.navFlashcards}
+            </Link>
           </div>
         </div>
         <LanguageSwitcher currentLocale={locale} label={dictionary.languageLabel} />
