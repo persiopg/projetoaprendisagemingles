@@ -438,15 +438,14 @@ export default async function LocaleHome({
                             <div className="h-8 w-8 rounded-full bg-blue-600" />
                           </div>
                           <div className="space-y-4">
-                            {[Layers, Mic, Keyboard].map((Icon, index) => (
-                              // eslint-disable-next-line react/no-array-index-key
+                            {[0, 1, 2].map((index) => (
                               <div
                                 key={index}
                                 className="flex items-center justify-between rounded-lg border border-zinc-800 bg-zinc-900 p-3"
                               >
                                 <div className="flex items-center gap-3">
-                                  <div className="flex h-8 w-8 items-center justify-center rounded bg-blue-600/20 text-blue-300">
-                                    <Icon className="h-4 w-4" />
+                                  <div className="flex h-8 w-8 items-center justify-center rounded bg-blue-600/20">
+                                    <div className="h-4 w-4 rounded bg-blue-300" />
                                   </div>
                                   <div className="h-3 w-28 rounded bg-zinc-700" />
                                 </div>
