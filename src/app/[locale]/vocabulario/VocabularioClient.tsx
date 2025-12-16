@@ -133,17 +133,15 @@ export function VocabularioClient({ locale }: { locale: string }) {
 
     setItems((prev) => {
       const next = prev.filter((p) => !(p.source === item.source && p.wordEn === item.wordEn));
+      setCurrentIndex((prevIdx) => {
+        if (next.length <= 0) return 0;
+        return Math.min(prevIdx, next.length - 1);
+      });
       return next;
     });
 
     setUserInput("");
     setFeedback(null);
-    setCurrentIndex((prevIdx) => {
-      // Se removemos o item atual, mantemos o índice (que agora aponta para o próximo), mas garantimos range.
-      const nextLen = items.length - 1;
-      if (nextLen <= 0) return 0;
-      return Math.min(prevIdx, nextLen - 1);
-    });
   };
 
   const onCheck = async () => {
@@ -276,7 +274,7 @@ export function VocabularioClient({ locale }: { locale: string }) {
                   {locale === "pt-br" ? "Errado." : locale === "es" ? "Incorrecto." : "Wrong."} {" "}
                   <span className="font-semibold">
                     {locale === "pt-br"
-                      ? ``
+                      ? `Resposta: ${feedback.expected}`
                       : locale === "es"
                         ? `Respuesta: ${feedback.expected}`
                         : `Answer: ${feedback.expected}`}

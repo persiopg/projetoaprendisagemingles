@@ -40,6 +40,20 @@ Sobre licença/atribuição: veja [ATTRIBUTION.md](ATTRIBUTION.md).
 
 ## Getting Started
 
+## Banco de dados (setup)
+
+Este projeto usa MySQL e algumas funcionalidades criam tabelas via scripts em `scripts/`.
+
+Para o módulo **Vocabulário** (erros + revisões):
+
+```bash
+node scripts/setup-vocab-mistakes-db.js
+node scripts/setup-vocab-review-cycles-db.js
+```
+
+- `vocab_mistakes`: armazena palavras que você errou.
+- `vocab_review_cycles`: controla a regra de revisão (palavras aprendidas há >10 dias voltam para o vocabulário no máximo 3 vezes).
+
 First, run the development server:
 
 ```bash

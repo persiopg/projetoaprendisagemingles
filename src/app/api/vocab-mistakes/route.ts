@@ -130,33 +130,37 @@ export async function GET(req: Request) {
       lastWrongAt: r.last_wrong_at ? new Date(r.last_wrong_at).toISOString() : null,
     }));
 
-    // Revisões: palavras aprendidas há >10 dias (flashcard_progress) e com <3 ciclos concluídos
+    // Revisões: palavras aprendidas há >10 dias (flashcard_progress) e com <3 ciclos concluídos.
+    // Para cumprir o limite de 3 vezes, só habilitamos revisões se a tabela vocab_review_cycles existir.
     let dueRows: RowDataPacket[] = [];
-    try {
-      const [result] = await db.execute<RowDataPacket[]>(
-        `
-        SELECT fp.word AS word_en, fp.last_reviewed AS last_reviewed,
-               COALESCE(vrc.completed_count, 0) AS completed_count
-        FROM flashcard_progress fp
-        LEFT JOIN vocab_review_cycles vrc
-          ON vrc.user_id = fp.user_id AND vrc.word_en = fp.word
-        WHERE fp.user_id = ?
-          AND fp.is_learned = 1
-          AND fp.last_reviewed IS NOT NULL
-          AND fp.last_reviewed <= DATE_SUB(NOW(), INTERVAL 10 DAY)
-          AND COALESCE(vrc.completed_count, 0) < 3
-        ORDER BY fp.last_reviewed ASC
-        LIMIT ${safeLimit}
-        `,
-        [userId]
-      );
-      dueRows = result;
-    } catch (e) {
-      const err2 = e as { code?: string } | null;
-      // Se a tabela de ciclos ainda não existir, tratamos como 0 ciclos.
-      // Se flashcard_progress não existir (não deve), só ignora revisões.
-      if (err2?.code !== "ER_NO_SUCH_TABLE") {
-        throw e;
+    const dueLimit = Math.max(0, safeLimit - mistakeItems.length);
+    if (dueLimit > 0) {
+      try {
+        const [result] = await db.execute<RowDataPacket[]>(
+          `
+          SELECT fp.word AS word_en, fp.last_reviewed AS last_reviewed,
+                 COALESCE(vrc.completed_count, 0) AS completed_count
+          FROM flashcard_progress fp
+          LEFT JOIN vocab_review_cycles vrc
+            ON vrc.user_id = fp.user_id AND vrc.word_en = fp.word
+          WHERE fp.user_id = ?
+            AND fp.is_learned = 1
+            AND fp.last_reviewed IS NOT NULL
+            AND fp.last_reviewed <= DATE_SUB(NOW(), INTERVAL 10 DAY)
+            AND COALESCE(vrc.completed_count, 0) < 3
+          ORDER BY fp.last_reviewed ASC
+          LIMIT ${dueLimit}
+          `,
+          [userId]
+        );
+        dueRows = result;
+      } catch (e) {
+        const err2 = e as { code?: string } | null;
+        if (err2?.code !== "ER_NO_SUCH_TABLE") {
+          throw e;
+        }
+        // Sem tabelas necessárias, não retorna revisões.
+        dueRows = [];
       }
     }
 
