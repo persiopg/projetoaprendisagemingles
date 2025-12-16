@@ -15,6 +15,7 @@ import { getDictionary } from "@/i18n/getDictionary";
 import { isLocale, locales, type Locale } from "@/i18n/locales";
 import { authOptions } from "@/lib/auth";
 import { db } from "@/lib/db";
+import { getUserStreak } from "@/lib/streak";
 
 export const dynamicParams = false;
 export const dynamic = "force-dynamic";
@@ -108,11 +109,14 @@ export default async function LocaleHome({
         ),
       ]);
 
+    const streakData = await getUserStreak(userId, 14);
+
     return {
       flashcardsLearned,
       shadowingLearned,
       bestDictationScore,
       bestReverseTranslationScore,
+      streak: streakData,
     };
   };
 
@@ -174,7 +178,7 @@ export default async function LocaleHome({
                 <h3 className="text-2xl font-semibold tracking-tight text-black dark:text-zinc-50">
                   {dict.dashboardLearnedTitle}
                 </h3>
-                <div className="grid gap-3 sm:grid-cols-3">
+                <div className="grid gap-3 sm:grid-cols-4">
                   <Link
                     href={`/${locale}/2000-palavras/flashcards`}
                     className="rounded-2xl border border-solid border-black/8 bg-white p-6 hover:bg-black/4 dark:border-white/[.145] dark:bg-black dark:hover:bg-white/8"
@@ -205,6 +209,18 @@ export default async function LocaleHome({
                     </div>
                     <div className="mt-2 text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">
                       {stats.flashcardsLearned + stats.shadowingLearned}
+                    </div>
+                  </div>
+                  <div className="rounded-2xl border border-solid border-black/8 bg-white p-6 dark:border-white/[.145] dark:bg-black">
+                    <div className="text-sm font-medium text-zinc-600 dark:text-zinc-400">{dict.dashboardStreakLabel ?? 'Streak'}</div>
+                    <div className="mt-2 flex items-center gap-3">
+                      <div className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50">{stats.streak?.streak ?? 0}</div>
+                      <div className="text-xs text-zinc-500 dark:text-zinc-400">Últimos 14 dias</div>
+                    </div>
+                    <div className="mt-3 flex gap-1">
+                      {stats.streak?.days.map((d) => (
+                        <div key={d.date} title={d.date} className={`w-4 h-4 rounded ${d.active ? 'bg-green-600' : 'bg-zinc-200 dark:bg-zinc-700'}`} />
+                      ))}
                     </div>
                   </div>
                 </div>

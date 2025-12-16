@@ -56,6 +56,8 @@ export type Dictionary = {
   dashboardCtaPrimary: string;
   dashboardCtaSecondary: string;
 
+  dashboardStreakLabel: string;
+
   navTopics: string;
   navAdvantages: string;
   navReasons: string;
@@ -65,6 +67,7 @@ export type Dictionary = {
   navShadowing: string;
   navDictation: string;
   navReverseTranslation: string;
+  navVocabulary: string;
 
   ctaPrimary: string;
 

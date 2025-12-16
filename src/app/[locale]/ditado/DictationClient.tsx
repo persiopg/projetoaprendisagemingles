@@ -5,7 +5,7 @@ import { useRouter } from "next/navigation";
 import { useMemo, useState } from "react";
 
 interface DictationClientProps {
-  sentences: { text: string; translation: string | null }[];
+  sentences: { text: string; translation: string | null; wordEn: string; wordPtBr: string | null }[];
   locale: string;
 }
 
@@ -15,6 +15,26 @@ export function DictationClient({ sentences, locale }: DictationClientProps) {
   const [answersByIndex, setAnswersByIndex] = useState<
     Record<number, { userText: string; isCorrect: boolean }>
   >({});
+
+  const recordMistake = async (index: number) => {
+    const s = sentences[index];
+    if (!s) return;
+    if (!s.wordPtBr) return;
+
+    try {
+      await fetch("/api/vocab-mistakes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          source: "dictation",
+          wordEn: s.wordEn,
+          wordPtBr: s.wordPtBr,
+        }),
+      });
+    } catch {
+      // ignore
+    }
+  };
 
   const speak = (text: string) => {
     if (typeof window === "undefined") return;
@@ -58,7 +78,7 @@ export function DictationClient({ sentences, locale }: DictationClientProps) {
     <div className="grid grid-cols-1 lg:grid-cols-[1fr_360px] gap-6 items-start">
       <div>
         <DictationGame
-          sentences={sentences}
+          sentences={sentences.map((s) => ({ text: s.text, translation: s.translation }))}
           onComplete={handleComplete}
           onAnswered={({ index, userText, isCorrect }) => {
             setAnsweredIndices((prev) => (prev.includes(index) ? prev : [...prev, index]));
@@ -66,6 +86,10 @@ export function DictationClient({ sentences, locale }: DictationClientProps) {
               ...prev,
               [index]: { userText, isCorrect },
             }));
+
+            if (!isCorrect) {
+              void recordMistake(index);
+            }
           }}
         />
       </div>

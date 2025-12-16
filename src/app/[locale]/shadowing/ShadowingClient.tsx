@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 
-type SentenceItem = { id: string; word: string; en: string; pt: string };
+type SentenceItem = { id: string; word: string; wordPtBr: string; en: string; pt: string };
 
 interface ShadowingClientProps {
   phrases: SentenceItem[];
@@ -14,6 +14,7 @@ export function ShadowingClient({ phrases, initialLearnedWords = [], isLoggedIn 
   const [speaking, setSpeaking] = useState<string | null>(null);
   const [learned, setLearned] = useState<Set<string>>(new Set(initialLearnedWords));
   const [loading, setLoading] = useState<string | null>(null);
+  const [savingMistake, setSavingMistake] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
 
   const currentPhrase = phrases[currentIndex];
@@ -62,6 +63,28 @@ export function ShadowingClient({ phrases, initialLearnedWords = [], isLoggedIn 
       console.error('Failed to update progress', error);
     } finally {
       setLoading(null);
+    }
+  };
+
+  const recordMistake = async (phrase: SentenceItem) => {
+    if (!isLoggedIn) return;
+    if (!phrase.wordPtBr?.trim()) return;
+
+    setSavingMistake(true);
+    try {
+      await fetch("/api/vocab-mistakes", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          source: "shadowing",
+          wordEn: phrase.word,
+          wordPtBr: phrase.wordPtBr,
+        }),
+      });
+    } catch (error) {
+      console.error("Failed to record vocab mistake", error);
+    } finally {
+      setSavingMistake(false);
     }
   };
 
@@ -116,7 +139,18 @@ export function ShadowingClient({ phrases, initialLearnedWords = [], isLoggedIn 
           <div className="absolute top-6 right-6 flex gap-2">
              {isLoggedIn && (
                 <button
-                  onClick={() => toggleLearned(currentPhrase.word)}
+                  onClick={() => void recordMistake(currentPhrase)}
+                  disabled={savingMistake || !currentPhrase.wordPtBr}
+                  className="px-3 py-2 rounded-full transition-colors text-red-600 bg-red-100 hover:bg-red-200 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-red-900/30 dark:text-red-400 dark:hover:bg-red-900/50"
+                  title="Marcar como erro (vai para Vocabulário)"
+                >
+                  {savingMistake ? "..." : "Errei"}
+                </button>
+              )}
+
+             {isLoggedIn && (
+                <button
+                  onClick={() => toggleLearned(currentPhrase.id)}
                   disabled={isCurrentLoading}
                   className={`p-3 rounded-full transition-colors ${
                     isCurrentLearned

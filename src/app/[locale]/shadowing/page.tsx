@@ -29,14 +29,14 @@ export default async function ShadowingPage({
   const validWords = allWords.filter(w => w.exampleEn && w.examplePtBr);
 
   // Expand words -> frases (uma entrada por sentença)
-  type SentenceItem = { id: string; word: string; en: string; pt: string };
+  type SentenceItem = { id: string; word: string; wordPtBr: string; en: string; pt: string };
   const sentences: SentenceItem[] = [];
   for (const w of validWords) {
     const enArr = w.exampleEn ?? [];
     const ptArr = w.examplePtBr ?? [];
     for (let i = 0; i < enArr.length; i++) {
       const id = `${w.word}::${i}`;
-      sentences.push({ id, word: w.word, en: enArr[i], pt: ptArr[i] ?? "" });
+      sentences.push({ id, word: w.word, wordPtBr: w.translationPtBr ?? "", en: enArr[i], pt: ptArr[i] ?? "" });
     }
   }
 

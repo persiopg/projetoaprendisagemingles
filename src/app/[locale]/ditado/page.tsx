@@ -42,6 +42,8 @@ export default async function DictationPage({
       return en.map((text, idx) => ({
         text,
         translation: pt[idx] ?? null,
+        wordEn: w.word,
+        wordPtBr: w.translationPtBr,
       }));
     })
     .filter((s) => s.text.length > 10)

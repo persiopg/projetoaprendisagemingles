@@ -104,6 +104,8 @@ export const dictionary: Dictionary = {
   dashboardCtaPrimary: "Continue Shadowing",
   dashboardCtaSecondary: "Review Flashcards",
 
+  dashboardStreakLabel: "Streak",
+
   navTopics: "Main topics",
   navAdvantages: "Advantages",
   navReasons: "Reasons",
@@ -113,6 +115,7 @@ export const dictionary: Dictionary = {
   navShadowing: "Shadowing",
   navDictation: "Dictation",
   navReverseTranslation: "Reverse Translation",
+  navVocabulary: "Vocabulary",
 
   ctaPrimary: "Start with the basics",
 

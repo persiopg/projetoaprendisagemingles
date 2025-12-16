@@ -9,6 +9,7 @@ import {
   Mic, 
   PenTool, 
   Languages, 
+  ListChecks,
   LogOut, 
   User,
   ChevronLeft,
@@ -66,6 +67,12 @@ export function Sidebar({ dictionary, locale, session }: SidebarProps) {
       href: `/${locale}/traducao-reversa`,
       icon: Languages,
       label: dictionary.navReverseTranslation,
+      exact: false
+    },
+    {
+      href: `/${locale}/vocabulario`,
+      icon: ListChecks,
+      label: dictionary.navVocabulary,
       exact: false
     }
   ];
