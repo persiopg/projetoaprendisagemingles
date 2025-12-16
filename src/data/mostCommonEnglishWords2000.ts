@@ -35,31 +35,8 @@ function normalizeExamplePairs(params: {
         if (pairs.length >= 3) break;
     }
 
-    // Completa com templates bilíngues (não precisa de tradutor externo)
-    const templates: Array<{ en: string; pt: string }> = [
-        {
-            en: `I saw the word "${params.word}" today.`,
-            pt: `Eu vi a palavra "${params.word}" hoje.`,
-        },
-        {
-            en: `Can you use "${params.word}" in a sentence?`,
-            pt: `Você consegue usar "${params.word}" em uma frase?`,
-        },
-        {
-            en: `Let's practice the word "${params.word}".`,
-            pt: `Vamos praticar a palavra "${params.word}".`,
-        },
-    ];
-
-    const seenEn = new Set(pairs.map((p) => p.en.toLowerCase()));
-    for (const t of templates) {
-        if (pairs.length >= 3) break;
-        if (seenEn.has(t.en.toLowerCase())) continue;
-        pairs.push(t);
-        seenEn.add(t.en.toLowerCase());
-    }
-
-    // Se ainda assim faltou (edge case), duplica o último par.
+    // Se ainda assim faltou (dataset atual costuma ter 1 frase), duplica o último par REAL.
+    // Isso mantém "3 frases" sem inventar exemplos artificiais.
     while (pairs.length > 0 && pairs.length < 3) pairs.push(pairs[pairs.length - 1]);
 
     return {
