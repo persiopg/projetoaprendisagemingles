@@ -1,11 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import type { MostCommonEnglishWordEntry } from "@/data/mostCommonEnglishWords2000.types";
+import { useState, useEffect } from "react";
+
+type SentenceItem = { id: string; word: string; en: string; pt: string };
 
 interface ShadowingClientProps {
-  phrases: MostCommonEnglishWordEntry[];
-  initialLearnedWords?: string[];
+  phrases: SentenceItem[];
+  initialLearnedWords?: string[]; // array de ids (ex: "word::0")
   isLoggedIn: boolean;
 }
 
@@ -30,28 +31,29 @@ export function ShadowingClient({ phrases, initialLearnedWords = [], isLoggedIn 
     }
   };
 
-  const toggleLearned = async (word: string) => {
+  const toggleLearned = async (wordOrId: string) => {
     if (!isLoggedIn) return;
-    
-    const isCurrentlyLearned = learned.has(word);
+    const id = wordOrId; // será o id da frase (ex: 'apple::1')
+    const isCurrentlyLearned = learned.has(id);
     const newLearnedState = !isCurrentlyLearned;
-    
-    setLoading(word);
-    
+
+    setLoading(id);
+
     try {
       const response = await fetch('/api/shadowing/progress', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ word, isLearned: newLearnedState }),
+        // ainda usamos o campo `word` no banco, mas gravamos o id da sentença para suportar frases
+        body: JSON.stringify({ word: id, isLearned: newLearnedState }),
       });
 
       if (response.ok) {
         setLearned(prev => {
           const next = new Set(prev);
           if (newLearnedState) {
-            next.add(word);
+            next.add(id);
           } else {
-            next.delete(word);
+            next.delete(id);
           }
           return next;
         });
@@ -85,12 +87,11 @@ export function ShadowingClient({ phrases, initialLearnedWords = [], isLoggedIn 
     );
   }
 
-  const isCurrentLearned = learned.has(currentPhrase.word);
-  const isCurrentLoading = loading === currentPhrase.word;
+  const isCurrentLearned = learned.has(currentPhrase?.id ?? "");
+  const isCurrentLoading = loading === (currentPhrase?.id ?? "");
 
-  const examplesEn = currentPhrase.exampleEn ?? [];
-  const examplesPtBr = currentPhrase.examplePtBr ?? [];
-  const speakText = examplesEn[0] ?? "";
+  const speakText = currentPhrase?.en ?? "";
+  const displayPt = currentPhrase?.pt ?? "";
 
   return (
     <div className="flex flex-col lg:flex-row gap-4 h-full">
@@ -137,34 +138,14 @@ export function ShadowingClient({ phrases, initialLearnedWords = [], isLoggedIn 
 
           <div className=" w-full space-y-8">
             <div className="space-y-3">
-              {examplesEn.slice(0, 3).map((t, idx) => (
-                <p
-                  key={idx}
-                  className={
-                    idx === 0
-                      ? "text-3xl md:text-4xl font-medium text-zinc-900 dark:text-zinc-100 leading-relaxed"
-                      : "text-xl md:text-2xl text-zinc-700 dark:text-zinc-300 leading-relaxed"
-                  }
-                >
-                  {t}
-                </p>
-              ))}
+              <p className="text-3xl md:text-4xl font-medium text-zinc-900 dark:text-zinc-100 leading-relaxed">
+                {currentPhrase?.en ?? ""}
+              </p>
             </div>
-            
+
             <div className={`pt-6 border-t ${isCurrentLearned ? 'border-green-200 dark:border-green-800' : 'border-zinc-100 dark:border-zinc-800'}`}>
               <div className="space-y-2">
-                {examplesPtBr.slice(0, 3).map((t, idx) => (
-                  <p
-                    key={idx}
-                    className={
-                      idx === 0
-                        ? "text-xl text-zinc-500 dark:text-zinc-400 italic"
-                        : "text-base text-zinc-500 dark:text-zinc-400 italic"
-                    }
-                  >
-                    {t}
-                  </p>
-                ))}
+                <p className="text-xl text-zinc-500 dark:text-zinc-400 italic">{displayPt}</p>
               </div>
             </div>
 
@@ -233,7 +214,7 @@ export function ShadowingClient({ phrases, initialLearnedWords = [], isLoggedIn 
         
         <div className="flex-1 overflow-y-auto p-2 space-y-2 custom-scrollbar">
           {phrases.map((phrase, index) => {
-            const isLearned = learned.has(phrase.word);
+            const isLearned = learned.has(phrase.id);
             const isActive = index === currentIndex;
             
             return (
@@ -247,7 +228,7 @@ export function ShadowingClient({ phrases, initialLearnedWords = [], isLoggedIn 
                 }`}
               >
                 <span className={`font-medium ${isActive ? 'text-blue-700 dark:text-blue-400' : 'text-zinc-700 dark:text-zinc-300'}`}>
-                  {phrase.word}
+                  {phrase.en}
                 </span>
                 
                 {isLearned && (

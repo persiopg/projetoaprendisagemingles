@@ -26,10 +26,21 @@ export default async function ShadowingPage({
   
   const allWords = await getMostCommonEnglishWords2000();
   // Filter words that have examples
-  const validPhrases = allWords.filter(w => w.exampleEn && w.examplePtBr);
+  const validWords = allWords.filter(w => w.exampleEn && w.examplePtBr);
 
-  const learnedWords = new Set<string>();
-  let phrasesToShow = validPhrases;
+  // Expand words -> frases (uma entrada por sentença)
+  type SentenceItem = { id: string; word: string; en: string; pt: string };
+  const sentences: SentenceItem[] = [];
+  for (const w of validWords) {
+    const enArr = w.exampleEn ?? [];
+    const ptArr = w.examplePtBr ?? [];
+    for (let i = 0; i < enArr.length; i++) {
+      const id = `${w.word}::${i}`;
+      sentences.push({ id, word: w.word, en: enArr[i], pt: ptArr[i] ?? "" });
+    }
+  }
+
+  const learnedSentences = new Set<string>();
 
   const [users] = await db.execute<RowDataPacket[]>(
     "SELECT id FROM users WHERE email = ?",
@@ -43,18 +54,30 @@ export default async function ShadowingPage({
       [userId]
     );
 
-    progress.forEach((p) => learnedWords.add(p.word));
+    progress.forEach((p) => {
+      const key = p.word as string;
+      if (key.includes("::")) {
+        // já é uma frase (id)
+        learnedSentences.add(key);
+      } else {
+        // Entradas antigas marcavam a palavra inteira — marca todas as frases daquela palavra como aprendidas
+        for (const s of sentences.filter(ss => ss.word === key)) {
+          learnedSentences.add(s.id);
+        }
+      }
+    });
   }
 
-  // Use Level Logic (2000/7)
-  const batchSize = Math.ceil(2000 / 7); // ~286 words per level
-  const currentLevel = Math.floor(learnedWords.size / batchSize);
+  // Use Level Logic based on frases (6000/7 → total frases / 7)
+  const totalSentences = sentences.length;
+  const batchSize = Math.ceil(totalSentences / 7);
+  const currentLevel = Math.floor(learnedSentences.size / batchSize);
 
   const start = currentLevel * batchSize;
   const end = start + batchSize;
 
-  // Get the current batch of words (mixed learned and unlearned)
-  phrasesToShow = validPhrases.slice(start, end);
+  // Get the current batch of sentences
+  const phrasesToShow = sentences.slice(start, end);
 
   return (
     <div className="container mx-auto px-4 py-4 h-[calc(100vh-4rem)] flex flex-col">
@@ -68,7 +91,7 @@ export default async function ShadowingPage({
         
         <div className="bg-blue-50 dark:bg-blue-900/20 p-2 rounded-lg border border-blue-100 dark:border-blue-800 inline-block">
           <p className="text-sm text-blue-800 dark:text-blue-300">
-            Você já aprendeu <strong>{learnedWords.size}</strong> frases! Hoje temos{" "}
+            Você já aprendeu <strong>{learnedSentences.size}</strong> frases! Hoje temos{" "}
             <strong>{phrasesToShow.length}</strong> novas frases para você praticar.
           </p>
         </div>
@@ -77,7 +100,7 @@ export default async function ShadowingPage({
       <div className="flex-1 min-h-0">
         <ShadowingClient 
           phrases={phrasesToShow} 
-          initialLearnedWords={Array.from(learnedWords)}
+          initialLearnedWords={Array.from(learnedSentences)}
           isLoggedIn={true}
         />
       </div>
