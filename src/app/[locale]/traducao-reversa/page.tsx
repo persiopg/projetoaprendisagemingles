@@ -33,13 +33,17 @@ export default async function ReverseTranslationPage({
   
   const dailyWords = words.slice(start, end);
   
-  // Filter words that have examples AND translations
+  // Expande cada palavra em até 3 frases (EN) + 3 traduções (PT) e escolhe 10 aleatórias
   const sentences = dailyWords
-    .filter(w => w.exampleEn && w.exampleEn.length > 10 && w.examplePtBr)
-    .map(w => ({
-      text: w.exampleEn!,
-      translation: w.examplePtBr
-    }))
+    .flatMap((w) => {
+      const en = w.exampleEn ?? [];
+      const pt = w.examplePtBr ?? [];
+      return en.map((text, idx) => ({
+        text,
+        translation: pt[idx] ?? null,
+      }));
+    })
+    .filter((s) => s.text.length > 10 && !!s.translation)
     .sort(() => 0.5 - Math.random())
     .slice(0, 10);
 

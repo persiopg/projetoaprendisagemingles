@@ -61,6 +61,9 @@ export default function FlashcardGame({
   const currentWord = words[currentIndex];
   const isLearned = currentWord ? learnedWords.has(currentWord.word) : false;
 
+  const examplesEn = currentWord?.exampleEn ?? null;
+  const examplesPtBr = currentWord?.examplePtBr ?? null;
+
   const toggleLearned = async (e: React.MouseEvent) => {
     e.stopPropagation();
     if (!currentWord) return;
@@ -233,13 +236,23 @@ export default function FlashcardGame({
 
               {currentWord.exampleEn && (
                 <div className="text-center mt-6 space-y-3  overflow-y-auto max-h-[60%]">
-                  <p className="text-xl text-gray-700 dark:text-gray-300 italic">
-                    &quot;{currentWord.exampleEn}&quot;
-                  </p>
-                  {currentWord.examplePtBr && (
-                    <p className="text-lg text-gray-500 dark:text-gray-400">
-                      &quot;{currentWord.examplePtBr}&quot;
-                    </p>
+                  {examplesEn && (
+                    <div className="space-y-2">
+                      {examplesEn.slice(0, 3).map((t, idx) => (
+                        <p key={idx} className="text-xl text-gray-700 dark:text-gray-300 italic">
+                          &quot;{t}&quot;
+                        </p>
+                      ))}
+                    </div>
+                  )}
+                  {examplesPtBr && (
+                    <div className="space-y-2">
+                      {examplesPtBr.slice(0, 3).map((t, idx) => (
+                        <p key={idx} className="text-lg text-gray-500 dark:text-gray-400">
+                          &quot;{t}&quot;
+                        </p>
+                      ))}
+                    </div>
                   )}
                 </div>
               )}

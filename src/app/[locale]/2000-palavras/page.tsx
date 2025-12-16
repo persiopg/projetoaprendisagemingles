@@ -33,6 +33,17 @@ export default async function Words2000Page({
 
 	const rows = await getMostCommonEnglishWords2000();
 
+	const renderExamples = (examples: string[] | null) => {
+		if (!examples || examples.length === 0) return "—";
+		return (
+			<div className="space-y-1">
+				{examples.slice(0, 3).map((t, idx) => (
+					<div key={idx}>{t}</div>
+				))}
+			</div>
+		);
+	};
+
 	const labels =
 		locale === "pt-br"
 			? {
@@ -100,12 +111,13 @@ export default async function Words2000Page({
 										{row.translationPtBr ?? "—"}
 									</td>
 									<td className="px-4 py-3 text-zinc-700 dark:text-zinc-300">
-										{row.exampleEn ?? "—"}
+										{renderExamples(row.exampleEn)}
 									</td>
 									<td className="px-4 py-3 text-zinc-700 dark:text-zinc-300">
-										{row.examplePtBr ?? "—"}
+										{renderExamples(row.examplePtBr)}
 									</td>
 									<td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
+										{/* Context column */}
 										{row.context ?? "—"}
 									</td>
 								</tr>

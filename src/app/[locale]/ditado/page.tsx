@@ -34,13 +34,17 @@ export default async function DictationPage({
   
   const dailyWords = words.slice(start, end);
   
-  // Filter words that have examples and pick 10 random
+  // Expande cada palavra em até 3 frases (EN) + 3 traduções (PT) e escolhe 10 aleatórias
   const sentences = dailyWords
-    .filter(w => w.exampleEn && w.exampleEn.length > 10)
-    .map(w => ({
-      text: w.exampleEn!,
-      translation: w.examplePtBr
-    }))
+    .flatMap((w) => {
+      const en = w.exampleEn ?? [];
+      const pt = w.examplePtBr ?? [];
+      return en.map((text, idx) => ({
+        text,
+        translation: pt[idx] ?? null,
+      }));
+    })
+    .filter((s) => s.text.length > 10)
     .sort(() => 0.5 - Math.random())
     .slice(0, 10);
 

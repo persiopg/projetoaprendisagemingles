@@ -88,6 +88,10 @@ export function ShadowingClient({ phrases, initialLearnedWords = [], isLoggedIn 
   const isCurrentLearned = learned.has(currentPhrase.word);
   const isCurrentLoading = loading === currentPhrase.word;
 
+  const examplesEn = currentPhrase.exampleEn ?? [];
+  const examplesPtBr = currentPhrase.examplePtBr ?? [];
+  const speakText = examplesEn[0] ?? "";
+
   return (
     <div className="flex flex-col lg:flex-row gap-4 h-full">
       {/* Main Card Area */}
@@ -132,25 +136,47 @@ export function ShadowingClient({ phrases, initialLearnedWords = [], isLoggedIn 
           </div>
 
           <div className=" w-full space-y-8">
-            <p className="text-3xl md:text-4xl font-medium text-zinc-900 dark:text-zinc-100 leading-relaxed">
-              {currentPhrase.exampleEn}
-            </p>
+            <div className="space-y-3">
+              {examplesEn.slice(0, 3).map((t, idx) => (
+                <p
+                  key={idx}
+                  className={
+                    idx === 0
+                      ? "text-3xl md:text-4xl font-medium text-zinc-900 dark:text-zinc-100 leading-relaxed"
+                      : "text-xl md:text-2xl text-zinc-700 dark:text-zinc-300 leading-relaxed"
+                  }
+                >
+                  {t}
+                </p>
+              ))}
+            </div>
             
             <div className={`pt-6 border-t ${isCurrentLearned ? 'border-green-200 dark:border-green-800' : 'border-zinc-100 dark:border-zinc-800'}`}>
-              <p className="text-xl text-zinc-500 dark:text-zinc-400 italic">
-                {currentPhrase.examplePtBr}
-              </p>
+              <div className="space-y-2">
+                {examplesPtBr.slice(0, 3).map((t, idx) => (
+                  <p
+                    key={idx}
+                    className={
+                      idx === 0
+                        ? "text-xl text-zinc-500 dark:text-zinc-400 italic"
+                        : "text-base text-zinc-500 dark:text-zinc-400 italic"
+                    }
+                  >
+                    {t}
+                  </p>
+                ))}
+              </div>
             </div>
 
             <div className="flex justify-center pt-4">
               <button
-                onClick={() => currentPhrase.exampleEn && speak(currentPhrase.exampleEn)}
+                onClick={() => speakText && speak(speakText)}
                 className={`p-6 rounded-full transition-all transform hover:scale-105 ${
-                  speaking === currentPhrase.exampleEn 
+                  speaking === speakText 
                     ? 'bg-blue-100 text-blue-600 dark:bg-blue-900/30 dark:text-blue-400 ring-4 ring-blue-200 dark:ring-blue-900/50' 
                     : 'bg-blue-600 text-white hover:bg-blue-700 shadow-lg shadow-blue-600/20'
                 }`}
-                disabled={!currentPhrase.exampleEn}
+                disabled={!speakText}
                 aria-label="Ouvir frase"
                 title="Ouvir frase"
               >

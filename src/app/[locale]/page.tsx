@@ -337,12 +337,12 @@ export default async function LocaleHome({
 
               <section id="examples" className="py-8">
                 <div className="text-center">
-                  <h3 className="text-sm font-semibold uppercase tracking-wide text-blue-600 dark:text-blue-400">
+                  <div className="text-sm font-semibold uppercase tracking-wide text-blue-600 dark:text-blue-400">
                     {dict.homeExamplesKicker}
-                  </h3>
-                  <p className="mt-2 text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-4xl">
+                  </div>
+                  <h2 className="mt-2 text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-4xl">
                     {dict.homeExamplesTitle}
-                  </p>
+                  </h2>
                   <p className="mx-auto mt-4 max-w-2xl text-base text-zinc-600 dark:text-zinc-400 sm:text-lg">
                     {dict.homeExamplesSubtitle}
                   </p>
@@ -402,9 +402,9 @@ export default async function LocaleHome({
                 <div className="rounded-2xl border border-solid border-black/8 bg-white p-8 dark:border-white/[.145] dark:bg-black">
                   <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
                     <div>
-                      <h3 className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-4xl">
+                      <h2 className="text-3xl font-semibold tracking-tight text-zinc-950 dark:text-zinc-50 sm:text-4xl">
                         {dict.homeBenefitsTitle}
-                      </h3>
+                      </h2>
                       <p className="mt-3 text-base text-zinc-600 dark:text-zinc-400 sm:text-lg">
                         {dict.homeBenefitsSubtitle}
                       </p>
@@ -462,9 +462,9 @@ export default async function LocaleHome({
 
               <section id="get-started" className="rounded-2xl bg-foreground px-8 py-12 text-background">
                 <div className="mx-auto max-w-2xl text-center">
-                  <h3 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+                  <h2 className="text-3xl font-semibold tracking-tight sm:text-4xl">
                     {dict.homeFinalTitle}
-                  </h3>
+                  </h2>
                   <p className="mt-4 text-base leading-7 opacity-90 sm:text-lg">
                     {dict.homeFinalSubtitle}
                   </p>
