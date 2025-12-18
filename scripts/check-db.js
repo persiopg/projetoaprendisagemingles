@@ -10,23 +10,9 @@ async function checkDb() {
     const pathModule = await import('path');
     const path = pathModule.default || pathModule;
 
-    // Ler arquivo .env manualmente para não depender do dotenv
-    const envPath = path.join(process.cwd(), '.env');
-    const envContent = fs.readFileSync(envPath, 'utf8');
-    const envVars = {};
-    
-    envContent.split('\n').forEach(line => {
-      const match = line.match(/^([^=]+)=(.*)$/);
-      if (match) {
-        const key = match[1].trim();
-        let value = match[2].trim();
-        // Remove aspas se houver
-        if (value.startsWith('"') && value.endsWith('"')) {
-          value = value.slice(1, -1);
-        }
-        envVars[key] = value;
-      }
-    });
+    // Carregar env vars via helper
+    const { loadEnv } = await import('./env-loader.js');
+    const envVars = loadEnv();
 
     console.log('Tentando conectar com as seguintes configurações:');
     console.log('Host:', envVars.DB_HOST);
@@ -60,7 +46,7 @@ async function checkDb() {
       JOIN users u ON fp.user_id = u.id
       LIMIT 10
     `);
-    
+
     if (progress.length === 0) {
       console.log('Nenhum progresso registrado ainda.');
     } else {

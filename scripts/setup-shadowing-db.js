@@ -4,24 +4,8 @@ const path = require('path');
 
 async function setupShadowingDb() {
   try {
-    // Ler arquivo .env manualmente
-    const envPath = path.join(process.cwd(), '.env');
-    let envVars = {};
-    
-    if (fs.existsSync(envPath)) {
-        const envContent = fs.readFileSync(envPath, 'utf8');
-        envContent.split('\n').forEach(line => {
-        const match = line.match(/^([^=]+)=(.*)$/);
-        if (match) {
-            const key = match[1].trim();
-            let value = match[2].trim();
-            if (value.startsWith('"') && value.endsWith('"')) {
-            value = value.slice(1, -1);
-            }
-            envVars[key] = value;
-        }
-        });
-    }
+    const { loadEnv } = require('./env-loader');
+    const envVars = loadEnv();
 
     const connection = await mysql.createConnection({
       host: envVars.DB_HOST || 'localhost',
