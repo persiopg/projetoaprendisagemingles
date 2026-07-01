@@ -19,6 +19,15 @@ const OUTPUT_WORDS_TS_FILE = path.join(
   "mostCommonEnglishWords2000.words.ts",
 );
 
+const WORDS_TO_IGNORE = new Set([
+  // Estrangeirismos de outras línguas vazados
+  "de", "la", "el", "en", "al", "las", "un", "os", "con", "se", "para", "por", "del", "les", "des",
+  // Termos e siglas técnicas/web de baixo valor
+  "html", "http", "www", "com", "net", "org", "pdf", "gif", "jpg", "jpeg", "png", "amp", "xml", "rss", "css", "url",
+  "ebay", "yahoo", "microsoft", "google", "adobe", "copyright", "php", "javascript", "sql", "click", "online", "website",
+  "email", "link", "post", "blog", "posts", "sites", "links", "blogs", "users", "faq", "wiki"
+]);
+
 function loadWords2000(limit = 2000) {
   const raw = readFileSync(INPUT_WORDS_FILE, "utf8");
 
@@ -31,12 +40,35 @@ function loadWords2000(limit = 2000) {
     if (!word) continue;
 
     const lower = word.toLowerCase();
+
+    // Filtro 1: letras únicas que não sejam 'a' ou 'i'
     if (lower.length === 1 && !keepSingleLetter.has(lower)) continue;
 
-    if (seen.has(lower)) continue;
-    seen.add(lower);
+    // Filtro 2: termos de exclusão (estrangeirismos e web inúteis)
+    if (WORDS_TO_IGNORE.has(lower)) continue;
 
+    // Filtro 3: duplicadas exatas
+    if (seen.has(lower)) continue;
+
+    // Filtro 4: plurais redundantes simples
+    let isRedundantPlural = false;
+    if (lower.endsWith("s") && lower.length > 2) {
+      const singular = lower.slice(0, -1);
+      if (seen.has(singular)) {
+        isRedundantPlural = true;
+      }
+    }
+    if (lower.endsWith("es") && lower.length > 3) {
+      const singular = lower.slice(0, -2);
+      if (seen.has(singular)) {
+        isRedundantPlural = true;
+      }
+    }
+    if (isRedundantPlural) continue;
+
+    seen.add(lower);
     out.push(lower);
+
     if (out.length >= limit) break;
   }
 

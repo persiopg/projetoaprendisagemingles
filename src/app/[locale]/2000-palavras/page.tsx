@@ -160,7 +160,6 @@ export default async function Words2000Page({
 								<th className="px-4 py-3">{labels.colTranslation}</th>
 								<th className="px-4 py-3">{labels.colExampleEn}</th>
 								<th className="px-4 py-3">{labels.colExamplePt}</th>
-								<th className="px-4 py-3">{labels.colContext}</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -180,10 +179,6 @@ export default async function Words2000Page({
 									</td>
 									<td className="px-4 py-3 text-zinc-700 dark:text-zinc-300">
 										{renderExamples(row.examplePtBr)}
-									</td>
-									<td className="px-4 py-3 text-zinc-600 dark:text-zinc-400">
-										{/* Context column */}
-										{row.context ?? "—"}
 									</td>
 								</tr>
 							))}

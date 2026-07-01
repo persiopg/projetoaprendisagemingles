@@ -3,6 +3,7 @@ import "server-only";
 import type { MostCommonEnglishWordEntry } from "./mostCommonEnglishWords2000.types";
 import { WORDS_EN_2000 } from "./mostCommonEnglishWords2000.words";
 import { MOST_COMMON_ENGLISH_WORDS_2000_GENERATED_OVERRIDES } from "./mostCommonEnglishWords2000.generatedOverrides";
+import { MOST_COMMON_ENGLISH_WORDS_2000_MANUAL_OVERRIDES } from "./mostCommonEnglishWords2000.manualOverrides";
 
 export type { MostCommonEnglishWordEntry };
 
@@ -49,28 +50,43 @@ export async function getMostCommonEnglishWords2000(): Promise<MostCommonEnglish
     return WORDS_EN_2000.map((word) => {
         const key = word.toLowerCase();
         const override = MOST_COMMON_ENGLISH_WORDS_2000_GENERATED_OVERRIDES[key];
+        const manualOverride = MOST_COMMON_ENGLISH_WORDS_2000_MANUAL_OVERRIDES[key];
 
-        if (override) {
-            const normalized = normalizeExamplePairs({
-                word,
-                exampleEn: override.exampleEn,
-                examplePtBr: override.examplePtBr,
-            });
-            return {
-                word,
-                translationPtBr: override.translationPtBr,
-                exampleEn: normalized.exampleEn,
-                examplePtBr: normalized.examplePtBr,
-                context: override.context,
-            };
+        let translation = override?.translationPtBr ?? null;
+        let exampleEn = override?.exampleEn ?? null;
+        let examplePtBr = override?.examplePtBr ?? null;
+        let context = override?.context ?? null;
+
+        // Se houver override manual, ele substitui
+        if (manualOverride) {
+            if (manualOverride.translationPtBr !== undefined) {
+                translation = manualOverride.translationPtBr;
+            }
+            if (manualOverride.exampleEn !== undefined) {
+                exampleEn = manualOverride.exampleEn;
+            }
+            if (manualOverride.examplePtBr !== undefined) {
+                examplePtBr = manualOverride.examplePtBr;
+            }
+            if (manualOverride.context !== undefined) {
+                context = manualOverride.context;
+            } else {
+                context = "Correção Manual";
+            }
         }
+
+        const normalized = normalizeExamplePairs({
+            word,
+            exampleEn,
+            examplePtBr,
+        });
 
         return {
             word,
-            translationPtBr: null,
-            exampleEn: null,
-            examplePtBr: null,
-            context: null,
+            translationPtBr: translation,
+            exampleEn: normalized.exampleEn,
+            examplePtBr: normalized.examplePtBr,
+            context: context,
         };
     });
 }

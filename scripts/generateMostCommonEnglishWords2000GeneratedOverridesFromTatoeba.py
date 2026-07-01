@@ -7,8 +7,8 @@ import urllib.request
 from dataclasses import dataclass
 from pathlib import Path
 
-import argostranslate.package
-import argostranslate.translate
+import json
+import urllib.parse
 
 
 RE_WORD = re.compile(r"[A-Za-z]+(?:[-'][A-Za-z]+)*")
@@ -28,30 +28,16 @@ def insert_top_k(best_list: list[BestSentence], candidate: BestSentence, k: int)
         del best_list[k:]
 
 
-def ensure_argos_en_to_pt_installed() -> None:
+def translate_google(text: str, from_lang: str = "en", to_lang: str = "pt") -> str:
     try:
-        translation = argostranslate.translate.get_translation_from_codes("en", "pt")
-        if translation is not None:
-            return
-    except Exception:
-        pass
-
-    argostranslate.package.update_package_index()
-    packages = argostranslate.package.get_available_packages()
-    candidates = [p for p in packages if p.from_code == "en" and p.to_code == "pt"]
-    if not candidates:
-        raise RuntimeError("Não encontrei pacote Argos EN→PT disponível no índice.")
-
-    pkg = candidates[0]
-    download_path = pkg.download()
-    argostranslate.package.install_from_path(download_path)
-
-
-def translate_en_to_pt(text: str) -> str:
-    translation = argostranslate.translate.get_translation_from_codes("en", "pt")
-    if translation is None:
-        raise RuntimeError("Tradução EN→PT não disponível no Argos (pacote não instalado).")
-    return translation.translate(text)
+        url = "https://translate.googleapis.com/translate_a/single?client=gtx&sl=" + from_lang + "&tl=" + to_lang + "&dt=t&q=" + urllib.parse.quote(text)
+        req = urllib.request.Request(url, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req, timeout=10) as response:
+            data = json.loads(response.read().decode('utf-8'))
+            return "".join([sent[0] for sent in data[0] if sent[0]])
+    except Exception as e:
+        print(f"Erro ao traduzir '{text}' via Google Translate: {e}")
+        return text
 
 
 def download_if_missing(url: str, dest: Path) -> None:
@@ -215,7 +201,22 @@ def main() -> int:
         print(f"Arquivo não encontrado: {words_path}", file=sys.stderr)
         return 2
 
-    ensure_argos_en_to_pt_installed()
+    # ensure_argos_en_to_pt_installed() foi removido para usar Google Translate
+
+    # Carrega traduções existentes do overrides.ts anterior para servir de cache
+    existing_translations: dict[str, str] = {}
+    if out_path.exists():
+        try:
+            content = out_path.read_text(encoding="utf-8")
+            # Busca padrões do tipo: "key": { translationPtBr: "translation" }
+            pattern = re.compile(r'"([^"]+)"\s*:\s*\{\s*translationPtBr:\s*"([^"]+)"', re.DOTALL)
+            for match in pattern.finditer(content):
+                w = match.group(1).lower()
+                trans = match.group(2)
+                existing_translations[w] = trans
+            print(f"Carregadas {len(existing_translations)} traduções do cache de overrides anterior.")
+        except Exception as e:
+            print(f"Não foi possível carregar overrides anteriores: {e}")
 
     download_if_missing("https://downloads.tatoeba.org/exports/sentences.tar.bz2", sentences_tar)
     download_if_missing("https://downloads.tatoeba.org/exports/links.tar.bz2", links_tar)
@@ -316,14 +317,18 @@ def main() -> int:
     used_human_pt = 0
     used_argos_pt = 0
 
-    argos_cache: dict[str, str] = {}
+    google_cache: dict[str, str] = {}
+    google_cache.update(existing_translations)
 
     def translate_cached(text: str) -> str:
-        cached = argos_cache.get(text)
+        key = text.lower()
+        cached = google_cache.get(key)
         if cached is not None:
             return cached
-        translated = translate_en_to_pt(text)
-        argos_cache[text] = translated
+        translated = translate_google(text)
+        google_cache[key] = translated
+        # Pequena pausa para evitar que a API do Google limite nossa taxa de requisição
+        time.sleep(0.2)
         return translated
 
     overrides_lines: list[str] = []
@@ -338,12 +343,10 @@ def main() -> int:
         if not candidates:
             missing_en += 1
             missing_en_words.append(w)
-            context = "Sem frase EN encontrada no Tatoeba"
+            context = "Sem frase encontrada"
         else:
-            # Primeiro tenta traduções humanas (via links)
+            # 1. Primeiro tenta traduções humanas (via links)
             for s in candidates:
-                if len(example_ens) >= 3:
-                    break
                 human_pt = pt_by_en_id.get(s.sentence_id)
                 if not human_pt:
                     continue
@@ -352,24 +355,20 @@ def main() -> int:
                 example_ens.append(s.text)
                 example_pts.append(human_pt)
 
-            # Se ainda faltou, completa com as frases restantes usando Argos
-            if len(example_ens) < 3:
-                for s in candidates:
-                    if len(example_ens) >= 3:
-                        break
-                    if s.text in example_ens:
-                        continue
-                    used_argos_pt += 1
-                    used_any_argos = True
-                    example_ens.append(s.text)
-                    example_pts.append(translate_cached(s.text))
+            # 2. Se não encontrou NENHUMA frase com tradução humana, pega a primeira do Tatoeba e traduz
+            if len(example_ens) == 0:
+                best_s = candidates[0]
+                used_argos_pt += 1
+                used_any_argos = True
+                example_ens.append(best_s.text)
+                example_pts.append(translate_cached(best_s.text))
 
             if used_any_human and used_any_argos:
-                context = "Tatoeba (parcial eng→por) + Argos Translate (fallback offline)"
+                context = "Tatoeba + Google Translate"
             elif used_any_human:
-                context = "Tatoeba (tradução humana eng→por)"
+                context = "Tatoeba (Tradução Humana)"
             else:
-                context = "Tatoeba (frase) + Argos Translate (offline)"
+                context = "Google Translate"
 
         # Garante 3/3 sem inventar frases novas: duplica o último par existente.
         while len(example_ens) > 0 and len(example_ens) < 3:
@@ -390,7 +389,7 @@ def main() -> int:
     out = (
         "// Arquivo gerado automaticamente. Não edite manualmente.\n"
         "// Fonte de frases: Tatoeba (https://tatoeba.org)\n"
-        "// Tradução (fallback): Argos Translate (offline)\n\n"
+        "// Tradução (fallback): Google Translate (online gtx API)\n\n"
         'import type { MostCommonEnglishWordEntryOverride } from "./mostCommonEnglishWords2000.types";\n\n'
         "export const MOST_COMMON_ENGLISH_WORDS_2000_GENERATED_OVERRIDES: Record<string, MostCommonEnglishWordEntryOverride> = {\n"
         + "\n".join(overrides_lines)
